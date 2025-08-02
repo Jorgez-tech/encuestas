@@ -1,0 +1,125 @@
+<!-- polls/templates/polls/detail.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ question.question_text }} - Encuestas</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+    <style>
+        .voting-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        .choice-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        .choice-item:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .choice-item input[type="radio"] {
+            margin-right: 1rem;
+            transform: scale(1.2);
+        }
+        .choice-label {
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .submit-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .error-message {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            border: 1px solid #f5c6cb;
+        }
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'polls:index' %}" class="back-link">← Volver a encuestas</a>
+        
+        <h1>{{ question.question_text }}</h1>
+        <p class="publish-date">Publicado el: {{ question.pub_date|date:"d/m/Y H:i" }}</p>
+        
+        {% if error_message %}
+            <div class="error-message">
+                <strong>Error:</strong> {{ error_message }}
+            </div>
+        {% endif %}
+        
+        <form action="{% url 'polls:vote' question.id %}" method="post" class="voting-form">
+            {% csrf_token %}
+            <h3>Selecciona tu opción:</h3>
+            
+            {% for choice in question.choice_set.all %}
+                <div class="choice-item">
+                    <label class="choice-label" for="choice{{ forloop.counter }}">
+                        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                        {{ choice.choice_text }}
+                    </label>
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="submit-button">Enviar Voto</button>
+        </form>
+    </div>
+    
+    <script src="{% static 'polls/scripts.js' %}"></script>
+    <script>
+        // Agregar efectos a las opciones de voto
+        document.querySelectorAll('.choice-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Remover selección visual de otros elementos
+                document.querySelectorAll('.choice-item').forEach(el => {
+                    el.style.borderColor = '#e9ecef';
+                    el.style.background = 'white';
+                });
+                
+                // Agregar selección visual al elemento actual
+                this.style.borderColor = '#667eea';
+                this.style.background = '#f0f2ff';
+            });
+        });
+    </script>
+</body>
+</html>

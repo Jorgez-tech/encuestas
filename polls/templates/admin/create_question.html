@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nueva Encuesta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .form-container {
+            padding: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .choices-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px 10px 0;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .choice-input {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .choice-input::before {
+            content: "Opción " counter(choice-counter) ":";
+            counter-increment: choice-counter;
+            display: block;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        .choices-section {
+            counter-reset: choice-counter;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>➕ Crear Nueva Encuesta</h1>
+            <p>Completa los campos para crear una nueva encuesta</p>
+        </div>
+
+        <form method="post" class="form-container">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="question_text">🤔 Pregunta de la Encuesta:</label>
+                <input type="text" id="question_text" name="question_text" 
+                       placeholder="Ej: ¿Cuál es tu color favorito?" 
+                       required maxlength="200">
+            </div>
+
+            <div class="choices-section">
+                <h3 style="margin-bottom: 1rem; color: #667eea;">📝 Opciones de Respuesta</h3>
+                <p style="margin-bottom: 1rem; color: #666;">Agrega las opciones que los usuarios podrán seleccionar (mínimo 2, máximo 4):</p>
+                
+                <div class="choice-input">
+                    <input type="text" name="choice1" placeholder="Primera opción" required>
+                </div>
+                
+                <div class="choice-input">
+                    <input type="text" name="choice2" placeholder="Segunda opción" required>
+                </div>
+                
+                <div class="choice-input">
+                    <input type="text" name="choice3" placeholder="Tercera opción (opcional)">
+                </div>
+                
+                <div class="choice-input">
+                    <input type="text" name="choice4" placeholder="Cuarta opción (opcional)">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-success">✅ Crear Encuesta</button>
+                <a href="{% url 'polls:admin_dashboard' %}" class="btn btn-secondary">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Validación del formulario
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const questionText = document.querySelector('#question_text').value.trim();
+            const choice1 = document.querySelector('input[name="choice1"]').value.trim();
+            const choice2 = document.querySelector('input[name="choice2"]').value.trim();
+            
+            if (!questionText) {
+                alert('Por favor ingresa una pregunta');
+                e.preventDefault();
+                return;
+            }
+            
+            if (!choice1 || !choice2) {
+                alert('Por favor ingresa al menos dos opciones');
+                e.preventDefault();
+                return;
+            }
+            
+            // Confirmación
+            if (!confirm(`¿Estás seguro de crear la encuesta "${questionText}"?`)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

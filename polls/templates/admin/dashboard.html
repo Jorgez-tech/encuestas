@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Encuestas</title>
+    {% load static %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .actions {
+            margin-bottom: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px 10px 0;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; }
+        .questions-list {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .question-item:last-child {
+            border-bottom: none;
+        }
+        .question-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .question-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .messages {
+            margin-bottom: 1rem;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏛️ Panel de Control de Encuestas</h1>
+        {% if is_admin %}
+            <p>Bienvenido, {{ user.username }}! Gestiona todas las encuestas desde aquí</p>
+        {% else %}
+            <p>Vista de solo lectura - <a href="/admin/login/" style="color: #ffd700;">Inicia sesión como administrador</a> para gestionar encuestas</p>
+        {% endif %}
+    </div>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_questions }}</div>
+            <div>Encuestas Totales</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_votes }}</div>
+            <div>Votos Totales</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ questions.count }}</div>
+            <div>Encuestas Activas</div>
+        </div>
+    </div>
+
+    <div class="actions">
+        {% if is_admin %}
+            <a href="{% url 'create_question' %}" class="btn btn-success">➕ Nueva Encuesta</a>
+            <a href="/admin/" class="btn">🔧 Admin Django</a>
+        {% else %}
+            <a href="/admin/login/" class="btn btn-success">🔐 Iniciar Sesión</a>
+            <a href="/admin/" class="btn">🔧 Admin Django</a>
+        {% endif %}
+        <a href="{% url 'polls:index' %}" class="btn btn-warning">👀 Ver Sitio Público</a>
+    </div>
+
+    <div class="questions-list">
+        <div style="padding: 1rem; background: #f8f9fa; border-bottom: 2px solid #667eea;">
+            <h2>📊 Encuestas Existentes</h2>
+        </div>
+        
+        {% for question in questions %}
+            <div class="question-item">
+                <div class="question-info">
+                    <h3>{{ question.question_text }}</h3>
+                    <div class="question-meta">
+                        📅 {{ question.pub_date|date:"d/m/Y H:i" }} | 
+                        🗳️ {{ question.choice_set.all|length }} opciones |
+                        📊 
+                        {% with total_votes=0 %}
+                            {% for choice in question.choice_set.all %}
+                                {% with total_votes=total_votes|add:choice.votes %}{% endwith %}
+                            {% endfor %}
+                            {{ total_votes }} votos totales
+                        {% endwith %}
+                    </div>
+                </div>
+                <div class="question-actions">
+                    <a href="{% url 'polls:detail' question.id %}" class="btn" style="padding: 8px 16px; font-size: 0.9rem;">👀 Ver</a>
+                    <a href="{% url 'polls:results' question.id %}" class="btn" style="padding: 8px 16px; font-size: 0.9rem;">📊 Resultados</a>
+                    {% if is_admin %}
+                        <a href="{% url 'edit_question' question.id %}" class="btn btn-warning" style="padding: 8px 16px; font-size: 0.9rem;">✏️ Editar</a>
+                        <a href="{% url 'delete_question' question.id %}" class="btn btn-danger" style="padding: 8px 16px; font-size: 0.9rem;">🗑️ Eliminar</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="question-item">
+                <div style="text-align: center; width: 100%; color: #666;">
+                    <p>No hay encuestas creadas aún.</p>
+                    <a href="{% url 'create_question' %}" class="btn btn-success" style="margin-top: 1rem;">Crear primera encuesta</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

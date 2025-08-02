@@ -1,0 +1,35 @@
+<!-- polls/templates/polls/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuestas</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Encuestas Disponibles</h1>
+        
+        {% if latest_question_list %}
+            <div id="polls-container">
+                {% for question in latest_question_list %}
+                    <div class="poll-card">
+                        <h3>{{ question.question_text }}</h3>
+                        <p class="publish-date">Publicado el: {{ question.pub_date|date:"d/m/Y H:i" }}</p>
+                        <a href="{% url 'polls:detail' question.id %}" class="vote-button">Votar Ahora</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-polls">
+                <p>No hay encuestas disponibles en este momento.</p>
+                <a href="/admin/" class="admin-link">Ir al panel de administración</a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script src="{% static 'polls/scripts.js' %}"></script>
+</body>
+</html>
