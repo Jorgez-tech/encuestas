@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - produccion
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -23,6 +25,9 @@ jobs:
 
       - name: Collect static files
         run: python manage.py collectstatic --noinput
+
+      - name: Copy index.html to deployment folder
+        run: cp encuestas/templates/index.html staticfiles/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
