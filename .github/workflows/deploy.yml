@@ -29,6 +29,11 @@ jobs:
       - name: Copy index.html to deployment folder
         run: cp encuestas/templates/index.html staticfiles/
 
+      - name: Modify links in deployed index.html
+        run: |
+          sed -i 's|href="/polls/"|href="https://github.com/Jorgez-tech/encuestas"|g' staticfiles/index.html
+          sed -i 's|href="/admin/"|href="https://github.com/Jorgez-tech/encuestas"|g' staticfiles/index.html
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

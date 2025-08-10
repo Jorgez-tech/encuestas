@@ -54,3 +54,14 @@ Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más 
 - Autenticación de usuarios para votar
 - Exportar resultados
 - Mejoras en la interfaz
+
+## Despliegue Estático (Demo)
+
+Este proyecto incluye un despliegue automático a **GitHub Pages** que sirve una versión estática de la página de inicio.
+
+-   **URL de la Demo:** [https://jorgez-tech.github.io/encuestas/](https://jorgez-tech.github.io/encuestas/)
+
+**Limitaciones de la Demo:**
+Debido a que GitHub Pages solo sirve contenido estático, esta versión es una **demostración visual sin funcionalidad de backend**. Las características que dependen de Django (como ver el listado de encuestas, votar o acceder al panel de administración) no están activas en esta URL.
+
+Para experimentar la aplicación completa, por favor, sigue las instrucciones de instalación y ejecútala en un entorno local.
