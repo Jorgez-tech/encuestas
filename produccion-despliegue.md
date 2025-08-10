@@ -6,13 +6,29 @@ Este documento describe el proceso profesional para preparar, optimizar y desple
 
 ## 1. Preparación para Producción
 
-- [ ] Verificar que el build de la aplicación se complete sin errores
-- [ ] Configurar correctamente las rutas relativas para assets y recursos estáticos
-- [ ] Optimizar imágenes, CSS y JS (minificación, compresión, eliminación de código muerto)
-- [ ] Limpiar el repositorio: eliminar archivos temporales, backups y carpetas innecesarias
-- [ ] Usar un archivo `.gitignore` adecuado para excluir archivos no relevantes (por ejemplo, entornos virtuales, archivos de configuración locales, bases de datos temporales)
-- [ ] Revisar y actualizar las dependencias en `requirements.txt` o `package.json`, eliminando las que no se usen
-- [ ] Documentar cualquier variable de entorno o configuración especial necesaria para producción
+- [x] Verificar que el build de la aplicación se complete sin errores
+- [x] Configurar correctamente las rutas relativas para assets y recursos estáticos
+- [x] Optimizar imágenes, CSS y JS (minificación, compresión, eliminación de código muerto)
+- [x] Limpiar el repositorio: eliminar archivos temporales, backups y carpetas innecesarias
+- [x] Usar un archivo `.gitignore` adecuado para excluir archivos no relevantes (por ejemplo, entornos virtuales, archivos de configuración locales, bases de datos temporales)
+- [x] Revisar y actualizar las dependencias en `requirements.txt` o `package.json`, eliminando las que no se usen
+- [x] Documentar cualquier variable de entorno o configuración especial necesaria para producción
+
+> **Variables recomendadas:**
+> - `DJANGO_SECRET_KEY`: Clave secreta para producción (no debe estar en el código fuente)
+> - `DJANGO_DEBUG`: Debe ser `False` en producción
+> - `DJANGO_ALLOWED_HOSTS`: Lista de dominios permitidos (ejemplo: `miapp.com,localhost`)
+> - `DATABASE_URL`: (opcional) Cadena de conexión a base de datos externa si aplica
+> - Configura estas variables en un archivo `.env` (excluido por `.gitignore`) o en el entorno del servidor.
+
+> **Ejemplo de .env:**
+> ```env
+> DJANGO_SECRET_KEY=tu_clave_secreta
+> DJANGO_DEBUG=False
+> DJANGO_ALLOWED_HOSTS=miapp.com,localhost
+> ```
+>
+> **Nota:** Nunca subas tu archivo `.env` ni claves sensibles al repositorio público.
 
 ---
 
