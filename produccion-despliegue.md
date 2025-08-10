@@ -34,31 +34,31 @@ Este documento describe el proceso profesional para preparar, optimizar y desple
 
 ## 2. Configuración de Despliegue (GitHub Actions + GitHub Pages)
 
-- [ ] Crear un workflow en `.github/workflows/deploy.yml` para automatizar el build y despliegue
-- [ ] Si usas frontend (React, Vue, etc.), configurar el campo `homepage` en `package.json`:
+- [x] Crear un workflow en `.github/workflows/deploy.yml` para automatizar el build y despliegue
+- [x] Si usas frontend (React, Vue, etc.), configurar el campo `homepage` en `package.json`:
   ```json
   "homepage": "https://<usuario>.github.io/<repositorio>"
   ```
-- [ ] Usar la acción `peaceiris/actions-gh-pages` para publicar el contenido estático:
+- [x] Usar la acción `peaceiris/actions-gh-pages` para publicar el contenido estático:
   ```yaml
   - name: Deploy to GitHub Pages
     uses: peaceiris/actions-gh-pages@v3
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
-      publish_dir: ./build  # o ./staticfiles, según corresponda
+      publish_dir: ./staticfiles
   ```
-- [ ] En Settings > Pages del repositorio, seleccionar la rama y carpeta fuente (por ejemplo, `gh-pages` o `/docs`)
-- [ ] Proteger la rama de despliegue si es necesario
+- [x] En Settings > Pages del repositorio, seleccionar la rama y carpeta fuente (por ejemplo, `gh-pages` o `/docs`)
+- [x] Proteger la rama de despliegue si es necesario
 
 ---
 
 ## 3. Checklist de Validación
 
-- [ ] Revisar los logs de GitHub Actions para asegurar que el workflow se ejecutó correctamente
-- [ ] Verificar el estado del despliegue en Settings > Pages (debe mostrar la URL pública activa)
-- [ ] Probar la aplicación en la URL pública de GitHub Pages
-- [ ] Revisar la consola del navegador para detectar errores de carga de recursos o rutas
-- [ ] Validar que los assets (CSS, JS, imágenes) se sirvan correctamente
+- [x] Revisar los logs de GitHub Actions para asegurar que el workflow se ejecutó correctamente
+- [x] Verificar el estado del despliegue en Settings > Pages (debe mostrar la URL pública activa)
+- [x] Probar la aplicación en la URL pública de GitHub Pages
+- [x] Revisar la consola del navegador para detectar errores de carga de recursos o rutas
+- [x] Validar que los assets (CSS, JS, imágenes) se sirvan correctamente
 
 ---
 
