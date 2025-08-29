@@ -1,5 +1,6 @@
 # Archivos y carpetas a ignorar por Git
 venv/
+env/
 *.sqlite3
 *.pyc
 __pycache__/
@@ -11,13 +12,25 @@ __pycache__/
 *.swp
 *.bak
 *.tmp
-# VSCode
+
+# IDEs y editores
 .vscode/
-AppData/
+.vs/
+.idea/
+
 # Archivos de entorno
 .env
+.env.local
+
 # Archivos de pruebas y caché
 .pytest_cache/
+.coverage
+
+# Archivos estáticos compilados
+staticfiles/
+
+# Archivos de sistema
 *.exe
 *.nupkg
 *.dat
+Thumbs.db
