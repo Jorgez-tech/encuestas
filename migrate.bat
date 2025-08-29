@@ -1,14 +1,27 @@
 @echo off
-cd /d "c:\Users\jzuta\proyectos\encuestas_django"
-echo Activando entorno virtual...
-call venv\Scripts\activate.bat
+echo ========================================
+echo    SCRIPT DE MIGRACIONES DJANGO
+echo ========================================
+echo.
+echo NOTA: Asegurate de tener un entorno virtual activado
+echo      con Django instalado antes de ejecutar este script.
 echo.
 echo Creando migraciones...
 python manage.py makemigrations
+if %errorlevel% neq 0 (
+    echo ERROR: No se pudieron crear las migraciones
+    pause
+    exit /b %errorlevel%
+)
 echo.
 echo Aplicando migraciones...
 python manage.py migrate
+if %errorlevel% neq 0 (
+    echo ERROR: No se pudieron aplicar las migraciones
+    pause
+    exit /b %errorlevel%
+)
 echo.
-echo Migraciones completadas!
-echo Presiona cualquier tecla para continuar...
+echo ✅ Migraciones completadas exitosamente!
+echo.
 pause
