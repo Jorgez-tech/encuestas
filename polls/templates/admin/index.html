@@ -1,0 +1,156 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.blockchain-status-panel {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.blockchain-status-panel h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.status-connected {
+    background: #d1edff;
+    color: #0c5460;
+}
+
+.status-disconnected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-unavailable {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.blockchain-actions {
+    margin-top: 15px;
+}
+
+.blockchain-action-btn {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 8px 16px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    border: none;
+    cursor: pointer;
+}
+
+.blockchain-action-btn:hover {
+    background: #0056b3;
+    color: white;
+    text-decoration: none;
+}
+
+.blockchain-action-btn.disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if blockchain_available %}
+<div class="blockchain-status-panel">
+    <h2>🔗 Blockchain Integration Status</h2>
+    
+    {% if blockchain_connected %}
+        <div class="status-indicator status-connected">
+            ✅ Blockchain Connected & Ready
+        </div>
+        <p>
+            Your Django application is successfully connected to the blockchain network. 
+            You can now create and manage blockchain-enabled polls with transparent, 
+            immutable voting records.
+        </p>
+        
+        <div class="blockchain-actions">
+            <a href="{% url 'admin:polls_blockchainquestion_changelist' %}" class="blockchain-action-btn">
+                📋 Manage Blockchain Questions
+            </a>
+            <a href="{% url 'admin:polls_blockchainquestion_add' %}" class="blockchain-action-btn">
+                ➕ Create Blockchain Question
+            </a>
+            <a href="{% url 'admin:polls_blockchainquestion_blockchain_dashboard' %}" class="blockchain-action-btn">
+                📊 Blockchain Dashboard
+            </a>
+            <a href="{% url 'admin:polls_blockchainvote_changelist' %}" class="blockchain-action-btn">
+                🗳️ View Blockchain Votes
+            </a>
+        </div>
+    
+    {% elif blockchain_available %}
+        <div class="status-indicator status-disconnected">
+            ⚠️ Blockchain Disconnected
+        </div>
+        <p>
+            Blockchain integration is available but not currently connected. 
+            Make sure your Hardhat network is running and the smart contract is deployed.
+        </p>
+        
+        <div class="blockchain-actions">
+            <strong>To connect blockchain:</strong>
+            <ol style="margin-top: 10px; font-size: 0.9em;">
+                <li>Open terminal and navigate to the <code>blockchain/</code> directory</li>
+                <li>Run: <code>npx hardhat node</code></li>
+                <li>In another terminal: <code>npx hardhat run scripts/deploy.js --network localhost</code></li>
+                <li>Refresh this page</li>
+            </ol>
+            
+            <a href="{% url 'admin:polls_blockchainquestion_blockchain_dashboard' %}" class="blockchain-action-btn">
+                📊 Blockchain Dashboard
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="blockchain-status-panel">
+    <h2>🔗 Blockchain Integration</h2>
+    <div class="status-indicator status-unavailable">
+        ℹ️ Blockchain Not Available
+    </div>
+    <p>
+        Blockchain integration is not currently available. 
+        This could be due to missing dependencies or configuration issues.
+    </p>
+    
+    <div style="font-size: 0.9em; margin-top: 10px;">
+        <strong>To enable blockchain features:</strong>
+        <ul style="margin-top: 5px;">
+            <li>Install: <code>pip install web3 eth-account python-dotenv</code></li>
+            <li>Configure blockchain settings in Django settings</li>
+            <li>Deploy the smart contract using Hardhat</li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+{{ block.super }}
+{% endblock %}
