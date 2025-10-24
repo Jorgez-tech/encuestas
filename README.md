@@ -65,3 +65,5 @@ Este proyecto incluye un despliegue automático a **GitHub Pages** que sirve una
 Debido a que GitHub Pages solo sirve contenido estático, esta versión es una **demostración visual sin funcionalidad de backend**. Las características que dependen de Django (como ver el listado de encuestas, votar o acceder al panel de administración) no están activas en esta URL.
 
 Para experimentar la aplicación completa, por favor, sigue las instrucciones de instalación y ejecútala en un entorno local.
+
+Proyecto original duplicado en GitLab, despliegu en DigitalOcean/Supabase opertivo y funcional. https://sea-turtle-app-f4lnd.ondigitalocean.app/polls/
