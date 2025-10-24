@@ -1,14 +1,20 @@
 import hre from "hardhat";
 
 async function main() {
-  console.log("🚀 Deploying VotingContract...\n");
+  console.log("🚀 Desplegando VotingContract (¡Aprendamos juntos!)...\n");
 
-  // Get the deployer account
+  // 📚 PASO 1: Obtener la cuenta que desplegará el contrato
+  console.log("📝 PASO 1: Obteniendo cuenta de despliegue...");
   const [deployer] = await hre.ethers.getSigners();
-  console.log("📝 Deploying with account:", deployer.address);
-  console.log("💰 Account balance:", hre.ethers.formatEther(await hre.ethers.provider.getBalance(deployer.address)), "ETH\n");
+  console.log("✅ Cuenta encontrada:", deployer.address);
+  
+  // 📚 PASO 2: Verificar que tenemos suficiente ETH
+  console.log("💰 PASO 2: Verificando balance...");
+  const balance = await hre.ethers.provider.getBalance(deployer.address);
+  console.log("✅ Balance disponible:", hre.ethers.formatEther(balance), "ETH\n");
 
-  // Deploy the contract
+  // 📚 PASO 3: Preparar el contrato para despliegue
+  console.log("🔧 PASO 3: Preparando contrato VotingContract...");
   const VotingContract = await hre.ethers.getContractFactory("VotingContract");
   const votingContract = await VotingContract.deploy();
   
