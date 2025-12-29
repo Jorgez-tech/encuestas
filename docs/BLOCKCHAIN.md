@@ -29,10 +29,10 @@ La integración blockchain añade una capa de transparencia e inmutabilidad a la
 ### Arquitectura de la Integración
 
 ```
-Django Backend ←→ Web3.py ←→ Ethereum Network
-     ↓                             ↓
-  Database                   Smart Contract
-  (Local Cache)              (Source of Truth)
+Django Backend <--> Web3.py <--> Ethereum Network
+| |
+Database Smart Contract
+(Local Cache) (Source of Truth)
 ```
 
 ## Smart Contract
@@ -51,21 +51,21 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract VotingContract is Ownable, ReentrancyGuard {
-    struct Question {
-        string text;
-        string[] choices;
-        uint256[] voteCounts;
-        bool isActive;
-        uint256 createdAt;
-    }
-    
-    mapping(uint256 => Question) public questions;
-    mapping(address => mapping(uint256 => bool)) public hasVoted;
-    uint256 public questionCount;
-    
-    event QuestionCreated(uint256 indexed questionId, string text, uint256 choiceCount);
-    event VoteCast(uint256 indexed questionId, uint256 choiceIndex, address voter);
-    event QuestionStatusChanged(uint256 indexed questionId, bool isActive);
+struct Question {
+string text;
+string[] choices;
+uint256[] voteCounts;
+bool isActive;
+uint256 createdAt;
+}
+ 
+mapping(uint256 => Question) public questions;
+mapping(address => mapping(uint256 => bool)) public hasVoted;
+uint256 public questionCount;
+ 
+event QuestionCreated(uint256 indexed questionId, string text, uint256 choiceCount);
+event VoteCast(uint256 indexed questionId, uint256 choiceIndex, address voter);
+event QuestionStatusChanged(uint256 indexed questionId, bool isActive);
 }
 ```
 
@@ -75,8 +75,8 @@ contract VotingContract is Ownable, ReentrancyGuard {
 
 ```solidity
 function createQuestion(
-    string memory _text, 
-    string[] memory _choices
+string memory _text, 
+string[] memory _choices
 ) public onlyOwner returns (uint256)
 ```
 
@@ -99,8 +99,8 @@ function createQuestion(
 **Ejemplo de uso**:
 ```javascript
 const tx = await contract.createQuestion(
-    "¿Cuál es tu color favorito?",
-    ["Rojo", "Azul", "Verde"]
+"¿Cuál es tu color favorito?",
+["Rojo", "Azul", "Verde"]
 );
 ```
 
@@ -108,8 +108,8 @@ const tx = await contract.createQuestion(
 
 ```solidity
 function vote(
-    uint256 _questionId, 
-    uint256 _choiceIndex
+uint256 _questionId, 
+uint256 _choiceIndex
 ) public nonReentrant
 ```
 
@@ -139,7 +139,7 @@ const tx = await contract.vote(1, 0); // Votar por la primera opción
 
 ```solidity
 function getResults(
-    uint256 _questionId
+uint256 _questionId
 ) public view returns (uint256[] memory)
 ```
 
@@ -162,13 +162,13 @@ console.log(results); // [5, 3, 7] - votos por opción
 
 ```solidity
 function getQuestion(
-    uint256 _questionId
+uint256 _questionId
 ) public view returns (
-    string memory text,
-    string[] memory choices,
-    uint256[] memory voteCounts,
-    bool isActive,
-    uint256 createdAt
+string memory text,
+string[] memory choices,
+uint256[] memory voteCounts,
+bool isActive,
+uint256 createdAt
 )
 ```
 
@@ -183,8 +183,8 @@ const [text, choices, votes, active, timestamp] = await contract.getQuestion(1);
 
 ```solidity
 function setQuestionActive(
-    uint256 _questionId, 
-    bool _isActive
+uint256 _questionId, 
+bool _isActive
 ) public onlyOwner
 ```
 
@@ -199,26 +199,26 @@ function setQuestionActive(
 
 ```solidity
 event QuestionCreated(
-    uint256 indexed questionId, 
-    string text, 
-    uint256 choiceCount
+uint256 indexed questionId, 
+string text, 
+uint256 choiceCount
 );
 
 event VoteCast(
-    uint256 indexed questionId, 
-    uint256 choiceIndex, 
-    address voter
+uint256 indexed questionId, 
+uint256 choiceIndex, 
+address voter
 );
 
 event QuestionStatusChanged(
-    uint256 indexed questionId, 
-    bool isActive
+uint256 indexed questionId, 
+bool isActive
 );
 ```
 
 **Uso de eventos**:
 - Permiten escuchar cambios en tiempo real
-- Facilitan la sincronización Django ↔ Blockchain
+- Facilitan la sincronización Django <-> Blockchain
 - Reducen necesidad de polling
 
 ### Seguridad del Smart Contract
@@ -264,9 +264,9 @@ function vote(...) public nonReentrant { }
 mapping(address => mapping(uint256 => bool)) public hasVoted;
 
 function vote(uint256 _questionId, uint256 _choiceIndex) public {
-    require(!hasVoted[msg.sender][_questionId], "Ya votaste");
-    hasVoted[msg.sender][_questionId] = true;
-    // ... registrar voto
+require(!hasVoted[msg.sender][_questionId], "Ya votaste");
+hasVoted[msg.sender][_questionId] = true;
+// ... registrar voto
 }
 ```
 
@@ -304,103 +304,103 @@ service = BlockchainVotingService(mock_mode=True)
 
 ```python
 def create_question(
-    self, 
-    question_text: str, 
-    choices: List[str]
+self, 
+question_text: str, 
+choices: List[str]
 ) -> Dict[str, Any]:
-    """
-    Crea una pregunta en blockchain.
-    
-    Returns:
-        {
-            'success': True,
-            'transaction_hash': '0x...',
-            'blockchain_id': 1,
-            'gas_used': 250000
-        }
-    """
+"""
+Crea una pregunta en blockchain.
+ 
+Returns:
+{
+'success': True,
+'transaction_hash': '0x...',
+'blockchain_id': 1,
+'gas_used': 250000
+}
+"""
 ```
 
 **Uso**:
 ```python
 result = service.create_question(
-    "¿Cuál es tu framework favorito?",
-    ["Django", "Flask", "FastAPI"]
+"¿Cuál es tu framework favorito?",
+["Django", "Flask", "FastAPI"]
 )
 
 if result['success']:
-    print(f"Pregunta creada con ID: {result['blockchain_id']}")
-    print(f"TX Hash: {result['transaction_hash']}")
+print(f"Pregunta creada con ID: {result['blockchain_id']}")
+print(f"TX Hash: {result['transaction_hash']}")
 ```
 
 ##### vote()
 
 ```python
 def vote(
-    self,
-    question_id: int,
-    choice_index: int,
-    voter_address: str
+self,
+question_id: int,
+choice_index: int,
+voter_address: str
 ) -> Dict[str, Any]:
-    """
-    Registra un voto en blockchain.
-    
-    Returns:
-        {
-            'success': True,
-            'transaction_hash': '0x...',
-            'block_number': 12345,
-            'gas_used': 100000
-        }
-    """
+"""
+Registra un voto en blockchain.
+ 
+Returns:
+{
+'success': True,
+'transaction_hash': '0x...',
+'block_number': 12345,
+'gas_used': 100000
+}
+"""
 ```
 
 **Uso**:
 ```python
 result = service.vote(
-    question_id=1,
-    choice_index=0,
-    voter_address="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+question_id=1,
+choice_index=0,
+voter_address="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 )
 
 if result['success']:
-    print(f"Voto registrado en bloque: {result['block_number']}")
+print(f"Voto registrado en bloque: {result['block_number']}")
 ```
 
 ##### get_results()
 
 ```python
 def get_results(self, question_id: int) -> Dict[str, Any]:
-    """
-    Obtiene resultados desde blockchain.
-    
-    Returns:
-        {
-            'success': True,
-            'results': [5, 3, 7],  # Votos por opción
-            'total_votes': 15
-        }
-    """
+"""
+Obtiene resultados desde blockchain.
+ 
+Returns:
+{
+'success': True,
+'results': [5, 3, 7], # Votos por opción
+'total_votes': 15
+}
+"""
 ```
 
 ##### has_voted()
 
 ```python
 def has_voted(self, question_id: int, address: str) -> bool:
-    """
-    Verifica si una dirección ya votó.
-    
-    Returns:
-        True si ya votó, False si no
-    """
+"""
+Verifica si una dirección ya votó.
+ 
+Returns:
+True si ya votó, False si no
+"""
 ```
 
 **Uso**:
 ```python
 if service.has_voted(1, "0xf39..."):
-    print("Ya votaste en esta pregunta")
+print("Ya votaste en esta pregunta")
 else:
-    print("Puedes votar")
+print("Puedes votar")
 ```
 
 #### Manejo de Errores
@@ -409,12 +409,12 @@ El servicio captura y maneja varios tipos de errores:
 
 ```python
 try:
-    result = service.vote(question_id, choice_index, voter_address)
-    if not result['success']:
-        error = result.get('error', 'Unknown error')
-        print(f"Error: {error}")
+result = service.vote(question_id, choice_index, voter_address)
+if not result['success']:
+error = result.get('error', 'Unknown error')
+print(f"Error: {error}")
 except Exception as e:
-    logger.error(f"Exception: {e}")
+logger.error(f"Exception: {e}")
 ```
 
 **Errores comunes**:
@@ -429,12 +429,12 @@ except Exception as e:
 
 ```python
 class BlockchainQuestion(BaseQuestion):
-    blockchain_id = models.IntegerField(null=True, blank=True)
-    transaction_hash = models.CharField(max_length=66, null=True, blank=True)
-    block_number = models.IntegerField(null=True, blank=True)
-    is_synced = models.BooleanField(default=False)
-    sync_error = models.TextField(null=True, blank=True)
-    last_sync_attempt = models.DateTimeField(null=True, blank=True)
+blockchain_id = models.IntegerField(null=True, blank=True)
+transaction_hash = models.CharField(max_length=66, null=True, blank=True)
+block_number = models.IntegerField(null=True, blank=True)
+is_synced = models.BooleanField(default=False)
+sync_error = models.TextField(null=True, blank=True)
+last_sync_attempt = models.DateTimeField(null=True, blank=True)
 ```
 
 **Campos**:
@@ -454,19 +454,19 @@ question.sync_to_blockchain()
 
 # Verificar si está sincronizado
 if question.is_synced:
-    print(f"Blockchain ID: {question.blockchain_id}")
+print(f"Blockchain ID: {question.blockchain_id}")
 ```
 
 ### BlockchainVote
 
 ```python
 class BlockchainVote(models.Model):
-    question = models.ForeignKey(BlockchainQuestion, on_delete=models.CASCADE)
-    choice = models.ForeignKey(BlockchainChoice, on_delete=models.CASCADE)
-    voter_address = models.CharField(max_length=42)
-    transaction_hash = models.CharField(max_length=66, unique=True)
-    block_number = models.IntegerField()
-    voted_at = models.DateTimeField(auto_now_add=True)
+question = models.ForeignKey(BlockchainQuestion, on_delete=models.CASCADE)
+choice = models.ForeignKey(BlockchainChoice, on_delete=models.CASCADE)
+voter_address = models.CharField(max_length=42)
+transaction_hash = models.CharField(max_length=66, unique=True)
+block_number = models.IntegerField()
+voted_at = models.DateTimeField(auto_now_add=True)
 ```
 
 **Propósito**: Cacheo local de votos blockchain
@@ -475,11 +475,11 @@ class BlockchainVote(models.Model):
 ```python
 # Registrar voto local
 BlockchainVote.objects.create(
-    question=question,
-    choice=choice,
-    voter_address="0xf39...",
-    transaction_hash="0x123...",
-    block_number=12345
+question=question,
+choice=choice,
+voter_address="0xf39...",
+transaction_hash="0x123...",
+block_number=12345
 )
 
 # Consultar votos
@@ -504,10 +504,10 @@ python manage.py blockchain_sync status
 
 **Salida**:
 ```
-🔗 Blockchain Integration Status
+Blockchain Integration Status
 ================================
 
-Connection Status: ✅ CONNECTED
+Connection Status: CONNECTED
 Network: Hardhat Local Network
 Chain ID: 31337
 Contract Address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
@@ -540,17 +540,17 @@ python manage.py blockchain_sync sync_all --force --verbose
 
 **Salida**:
 ```
-🔄 Starting blockchain synchronization...
+Starting blockchain synchronization...
 
 [1/5] Syncing Question #1: "¿Tu color favorito?"
-  ✅ Success - TX: 0x123... | Blockchain ID: 1
+Success - TX: 0x123... | Blockchain ID: 1
 
 [2/5] Syncing Question #2: "¿Tu comida favorita?"
-  ✅ Success - TX: 0x456... | Blockchain ID: 2
+Success - TX: 0x456... | Blockchain ID: 2
 
 ...
 
-✅ Synchronization complete!
+Synchronization complete!
 - Successful: 5
 - Failed: 0
 - Skipped: 5 (already synced)
@@ -579,7 +579,7 @@ python manage.py blockchain_sync deploy_check
 
 **Salida**:
 ```
-✅ Smart contract is deployed and accessible
+Smart contract is deployed and accessible
 Contract address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
 Question count: 5
 ```
@@ -614,31 +614,31 @@ python manage.py blockchain_sync reset_sync --question-id 5
 #### Secciones del Dashboard
 
 1. **Connection Status**
-   - Estado de conexión (Connected/Mock/Disconnected)
-   - Información de red
-   - Dirección del contrato
-   - Número de bloque actual
+- Estado de conexión (Connected/Mock/Disconnected)
+- Información de red
+- Dirección del contrato
+- Número de bloque actual
 
 2. **Statistics**
-   - Total de preguntas
-   - Preguntas sincronizadas
-   - Votos en blockchain
-   - Gas utilizado total
+- Total de preguntas
+- Preguntas sincronizadas
+- Votos en blockchain
+- Gas utilizado total
 
 3. **Recent Activity**
-   - Últimas sincronizaciones
-   - Últimos votos registrados
-   - Errores recientes
+- Últimas sincronizaciones
+- Últimos votos registrados
+- Errores recientes
 
 4. **Quick Actions**
-   - Botones para sincronizar
-   - Ver estado detallado
-   - Resetear sincronización
+- Botones para sincronizar
+- Ver estado detallado
+- Resetear sincronización
 
 #### Admin de BlockchainQuestion
 
 **Características**:
-- Lista con estado de sincronización (🔗, ⏳, 💾)
+- Lista con estado de sincronización (, , )
 - Acciones bulk: "Sync selected to blockchain"
 - Filtros por estado de sincronización
 - Búsqueda por texto y blockchain_id
@@ -680,7 +680,7 @@ BLOCKCHAIN_MOCK_MODE=True
 ```python
 # settings.py
 BLOCKCHAIN_CONFIG = {
-    'MOCK_MODE': True,
+'MOCK_MODE': True,
 }
 ```
 
@@ -693,12 +693,12 @@ service = BlockchainVotingService(mock_mode=True)
 
 ```python
 # Modo Mock simula:
-- ✅ Transaction hashes (0xmock...)
-- ✅ Blockchain IDs (incrementales)
-- ✅ Block numbers (simulados)
-- ✅ Gas usado (valores realistas)
-- ✅ Delays de transacción (simulados)
-- ✅ Errores aleatorios (testing)
+- Transaction hashes (0xmock...)
+- Blockchain IDs (incrementales)
+- Block numbers (simulados)
+- Gas usado (valores realistas)
+- Delays de transacción (simulados)
+- Errores aleatorios (testing)
 ```
 
 ### Detectar Modo Mock
@@ -709,9 +709,9 @@ from polls.blockchain.services import BlockchainVotingService
 service = BlockchainVotingService()
 
 if service.mock_mode:
-    print("⚠️  Running in MOCK mode - blockchain not required")
+print(" Running in MOCK mode - blockchain not required")
 else:
-    print("🔗 Connected to real blockchain")
+print(" Connected to real blockchain")
 ```
 
 ## Seguridad
@@ -720,13 +720,13 @@ else:
 
 #### 1. Claves Privadas
 
-❌ **NUNCA hacer esto**:
+**NUNCA hacer esto**:
 ```python
 # settings.py - MAL
 PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 ```
 
-✅ **Hacer esto**:
+**Hacer esto**:
 ```python
 # .env
 BLOCKCHAIN_PRIVATE_KEY=0xac0974...
@@ -745,11 +745,11 @@ PRIVATE_KEY = os.getenv('BLOCKCHAIN_PRIVATE_KEY')
 from web3 import Web3
 
 def is_valid_address(address: str) -> bool:
-    return Web3.is_address(address)
+return Web3.is_address(address)
 
 # Usar antes de votar
 if not is_valid_address(voter_address):
-    raise ValueError("Invalid Ethereum address")
+raise ValueError("Invalid Ethereum address")
 ```
 
 #### 3. Rate Limiting
@@ -760,9 +760,9 @@ Implementar rate limiting para prevenir spam:
 # views.py
 from django.views.decorators.cache import cache_page
 
-@cache_page(60)  # Cache por 1 minuto
+@cache_page(60) # Cache por 1 minuto
 def vote_view(request):
-    # ... lógica de votación
+# ... lógica de votación
 ```
 
 #### 4. Gas Limits
@@ -771,14 +771,14 @@ Configurar límites de gas apropiados:
 
 ```python
 BLOCKCHAIN_CONFIG = {
-    'GAS_LIMIT': 500000,  # Límite máximo
-    'GAS_PRICE_GWEI': 20,  # Precio en Gwei
+'GAS_LIMIT': 500000, # Límite máximo
+'GAS_PRICE_GWEI': 20, # Precio en Gwei
 }
 ```
 
 ### Auditoría de Smart Contracts
 
-⚠️ **Importante**: Antes de desplegar en mainnet:
+**Importante**: Antes de desplegar en mainnet:
 
 1. **Auditoría profesional** de smart contracts
 2. **Testing exhaustivo** en testnet
@@ -823,15 +823,15 @@ slither blockchain/contracts/VotingContract.sol
 from polls.blockchain.models import GasUsageLog
 
 GasUsageLog.objects.create(
-    operation='create_question',
-    gas_used=250000,
-    gas_price=20,
-    total_cost_eth=0.005
+operation='create_question',
+gas_used=250000,
+gas_price=20,
+total_cost_eth=0.005
 )
 
 # Analizar costos
 total_spent = GasUsageLog.objects.aggregate(
-    total=Sum('total_cost_eth')
+total=Sum('total_cost_eth')
 )['total']
 ```
 
@@ -872,17 +872,17 @@ service = BlockchainVotingService(mock_mode=True)
 
 # 2. Crear pregunta
 result = service.create_question(
-    "Test Question",
-    ["Option A", "Option B"]
+"Test Question",
+["Option A", "Option B"]
 )
 
 assert result['success'] == True
 
 # 3. Votar
 vote_result = service.vote(
-    result['blockchain_id'],
-    0,
-    "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+result['blockchain_id'],
+0,
+"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 )
 
 assert vote_result['success'] == True
@@ -902,5 +902,5 @@ assert results['results'][0] == 1
 
 ---
 
-**Última Actualización**: Diciembre 2025  
+**Última Actualización**: Diciembre 2025 
 **Autor**: @Jorgez-tech

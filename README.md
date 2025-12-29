@@ -7,24 +7,24 @@
 
 Sistema de votación híbrido que combina la robustez de Django con la transparencia y seguridad de blockchain (Ethereum). Este proyecto ha evolucionado desde una aplicación de encuestas tradicional hacia una DApp (Aplicación Descentralizada) que garantiza transparencia en los procesos de votación.
 
-## 🌟 Características Principales
+## Características Principales
 
 ### Backend Django
-- ✅ Panel de administración completo y profesional
-- ✅ Gestión de preguntas y opciones de votación
-- ✅ Sistema de usuarios y autenticación
-- ✅ Visualización de resultados en tiempo real
-- ✅ API para interacción con frontend
+- Panel de administración completo y profesional
+- Gestión de preguntas y opciones de votación
+- Sistema de usuarios y autenticación
+- Visualización de resultados en tiempo real
+- API para interacción con frontend
 
 ### Integración Blockchain
-- ✅ Smart contracts en Solidity con OpenZeppelin
-- ✅ Votación inmutable y transparente en blockchain
-- ✅ Prevención de votos duplicados mediante wallets
-- ✅ Sincronización automática Django ↔ Blockchain
-- ✅ Modo mock para desarrollo sin blockchain
-- ✅ Dashboard de monitoreo blockchain
+- Smart contracts en Solidity con OpenZeppelin
+- Votación inmutable y transparente en blockchain
+- Prevención de votos duplicados mediante wallets
+- Sincronización automática Django <-> Blockchain
+- Modo mock para desarrollo sin blockchain
+- Dashboard de monitoreo blockchain
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Prerrequisitos
 - Python 3.8+
@@ -40,7 +40,7 @@ cd encuestas
 
 # Crear entorno virtual
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+source venv/bin/activate # En Windows: venv\Scripts\activate
 
 # Instalar dependencias
 pip install -r requirements.txt
@@ -64,7 +64,7 @@ python manage.py runserver
 
 Para habilitar las funcionalidades blockchain completas, consulta la [Guía de Instalación Completa](docs/INSTALLATION.md).
 
-## 📚 Documentación
+## Documentación
 
 - **[Arquitectura del Sistema](docs/ARCHITECTURE.md)** - Diseño y componentes del sistema
 - **[Instalación Completa](docs/INSTALLATION.md)** - Guía detallada de instalación y configuración
@@ -72,41 +72,41 @@ Para habilitar las funcionalidades blockchain completas, consulta la [Guía de I
 - **[Guía de Desarrollo](docs/DEVELOPMENT.md)** - Información para desarrolladores
 - **[Despliegue](docs/DEPLOYMENT.md)** - Instrucciones de despliegue en producción
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 Este sistema utiliza una arquitectura híbrida:
 
 ```
-┌─────────────────────────────────────────┐
-│         Frontend (HTML/JS)              │
-│  - Interfaz de usuario                  │
-│  - Integración Web3 (MetaMask)         │
-└─────────────────────────────────────────┘
-                  ↓
-┌─────────────────────────────────────────┐
-│         Backend Django                   │
-│  - Admin panel                          │
-│  - API REST                             │
-│  - Gestión de usuarios                  │
-│  - Base de datos SQLite/PostgreSQL     │
-└─────────────────────────────────────────┘
-                  ↓
-┌─────────────────────────────────────────┐
-│     Capa de Integración (Web3.py)      │
-│  - BlockchainVotingService              │
-│  - Sincronización automática            │
-│  - Modo mock para desarrollo           │
-└─────────────────────────────────────────┘
-                  ↓
-┌─────────────────────────────────────────┐
-│    Blockchain (Ethereum/Hardhat)        │
-│  - Smart Contract (Solidity)           │
-│  - VotingContract.sol                   │
-│  - OpenZeppelin (seguridad)            │
-└─────────────────────────────────────────┘
+
+Frontend (HTML/JS) 
+- Interfaz de usuario 
+- Integración Web3 (MetaMask) 
+
+|
+
+Backend Django 
+- Admin panel 
+- API REST 
+- Gestión de usuarios 
+- Base de datos SQLite/PostgreSQL 
+
+|
+
+Capa de Integración (Web3.py) 
+- BlockchainVotingService 
+- Sincronización automática 
+- Modo mock para desarrollo 
+
+|
+
+Blockchain (Ethereum/Hardhat) 
+- Smart Contract (Solidity) 
+- VotingContract.sol 
+- OpenZeppelin (seguridad) 
+
 ```
 
-## 🔧 Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 ### Backend
 - **Django 4.2+**: Framework web principal
@@ -125,31 +125,31 @@ Este sistema utiliza una arquitectura híbrida:
 - **Web3.js**: Integración con wallets (futuro)
 - **Bootstrap**: Framework CSS
 
-## 📊 Estado del Proyecto
+## Estado del Proyecto
 
-- ✅ **Fase 1**: Aplicación Django básica de encuestas
-- ✅ **Fase 2**: Smart contracts desarrollados y desplegados
-- ✅ **Fase 3**: Integración Django ↔ Blockchain completada
-- ✅ **Fase 4**: Panel de administración blockchain
-- ✅ **Fase 5**: Comandos de gestión y sincronización
-- 🚧 **Fase 6**: Frontend Web3 con wallet connection (en progreso)
-- 📋 **Fase 7**: Deploy en testnet/mainnet (planeado)
+- **Fase 1**: Aplicación Django básica de encuestas
+- **Fase 2**: Smart contracts desarrollados y desplegados
+- **Fase 3**: Integración Django <-> Blockchain completada
+- **Fase 4**: Panel de administración blockchain
+- **Fase 5**: Comandos de gestión y sincronización
+- **Fase 6**: Frontend Web3 con wallet connection (en progreso)
+- **Fase 7**: Deploy en testnet/mainnet (planeado)
 
-## 🎯 Casos de Uso
+## Casos de Uso
 
 1. **Votaciones Organizacionales**: Decisiones transparentes en empresas/DAOs
 2. **Encuestas Públicas**: Garantizar integridad de resultados
 3. **Elecciones Estudiantiles**: Sistema verificable y auditable
 4. **Polls Comunitarios**: Votaciones descentralizadas en comunidades
 
-## 🔗 Enlaces y Demos
+## Enlaces y Demos
 
 - **Repositorio GitHub**: https://github.com/Jorgez-tech/encuestas
 - **Demo Estática**: https://jorgez-tech.github.io/encuestas/ (Solo visualización)
 - **Demo Funcional**: https://sea-turtle-app-f4lnd.ondigitalocean.app/polls/
 - **Documentación Completa**: [docs/](docs/)
 
-## 🤝 Contribución
+## Contribución
 
 Las contribuciones son bienvenidas. Por favor:
 
@@ -159,15 +159,15 @@ Las contribuciones son bienvenidas. Por favor:
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-## 📝 Licencia
+## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
-## 👤 Autor
+## Autor
 
 **Jorge** - [@Jorgez-tech](https://github.com/Jorgez-tech)
 
-## 🙏 Agradecimientos
+## Agradecimientos
 
 - Django community por el excelente framework
 - OpenZeppelin por los contratos seguros auditados

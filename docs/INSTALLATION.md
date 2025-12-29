@@ -30,7 +30,7 @@ Esta guía describe el proceso completo de instalación del sistema de votación
 
 ```bash
 # Verificar Python
-python --version  # Debería mostrar Python 3.8+
+python --version # Debería mostrar Python 3.8+
 
 # Verificar pip
 pip --version
@@ -40,7 +40,7 @@ git --version
 
 # Para instalación blockchain:
 # Verificar Node.js
-node --version  # Debería mostrar v22.0+
+node --version # Debería mostrar v22.0+
 
 # Verificar npm
 npm --version
@@ -128,7 +128,7 @@ python manage.py runserver
 
 - **App principal**: http://127.0.0.1:8000/polls/
 - **Panel de administración**: http://127.0.0.1:8000/admin/
-  - Usa las credenciales del superusuario creado en el paso 4
+- Usa las credenciales del superusuario creado en el paso 4
 
 ### 7. Modo Mock (Opcional)
 
@@ -220,7 +220,7 @@ npx hardhat ignition deploy ignition/modules/VotingContract.ts --network localho
 
 **Salida esperada:**
 ```
-✅ VotingContract deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+VotingContract deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3
 ```
 
 **Importante**: Guarda la dirección del contrato desplegado.
@@ -246,10 +246,10 @@ Si no estás usando `.env`, puedes configurar directamente en `encuestas/setting
 ```python
 # encuestas/settings.py
 BLOCKCHAIN_CONFIG = {
-    'WEB3_PROVIDER_URL': 'http://127.0.0.1:8545',
-    'CONTRACT_ADDRESS': '0x5FbDB2315678afecb367f032d93F642f64180aa3',  # Tu dirección
-    'CHAIN_ID': 31337,
-    'MOCK_MODE': False,
+'WEB3_PROVIDER_URL': 'http://127.0.0.1:8545',
+'CONTRACT_ADDRESS': '0x5FbDB2315678afecb367f032d93F642f64180aa3', # Tu dirección
+'CHAIN_ID': 31337,
+'MOCK_MODE': False,
 }
 ```
 
@@ -262,9 +262,9 @@ python manage.py blockchain_sync status
 
 **Salida esperada:**
 ```
-✅ Blockchain Connection: ACTIVE
-✅ Contract Address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
-✅ Network: Hardhat Local (Chain ID: 31337)
+Blockchain Connection: ACTIVE
+Contract Address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+Network: Hardhat Local (Chain ID: 31337)
 ```
 
 ### 10. Sincronizar Preguntas con Blockchain
@@ -304,12 +304,12 @@ npx hardhat node
 ```python
 # encuestas/settings.py
 BLOCKCHAIN_CONFIG = {
-    # ... otras configuraciones
-    'OWNER_PRIVATE_KEY': '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
+# ... otras configuraciones
+'OWNER_PRIVATE_KEY': '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
 }
 ```
 
-⚠️ **NUNCA** commities claves privadas reales a git. Usa variables de entorno en producción.
+**NUNCA** commities claves privadas reales a git. Usa variables de entorno en producción.
 
 ### Configurar PostgreSQL (Producción)
 
@@ -330,14 +330,14 @@ GRANT ALL PRIVILEGES ON DATABASE encuestas_db TO encuestas_user;
 **3. Actualizar settings.py:**
 ```python
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'encuestas_db',
-        'USER': 'encuestas_user',
-        'PASSWORD': 'tu_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+'default': {
+'ENGINE': 'django.db.backends.postgresql',
+'NAME': 'encuestas_db',
+'USER': 'encuestas_user',
+'PASSWORD': 'tu_password',
+'HOST': 'localhost',
+'PORT': '5432',
+}
 }
 ```
 
@@ -354,13 +354,13 @@ pip install django-redis redis
 
 # En settings.py
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
+'default': {
+'BACKEND': 'django_redis.cache.RedisCache',
+'LOCATION': 'redis://127.0.0.1:6379/1',
+'OPTIONS': {
+'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+}
+}
 }
 ```
 
@@ -456,9 +456,9 @@ npx hardhat node
 1. Verifica que Hardhat node esté corriendo
 2. Verifica la URL en `.env` o `settings.py`
 3. Usa modo mock para desarrollo:
-   ```bash
-   echo "BLOCKCHAIN_MOCK_MODE=True" >> .env
-   ```
+```bash
+echo "BLOCKCHAIN_MOCK_MODE=True" >> .env
+```
 
 ### Problema: "Transaction reverted" al votar
 
@@ -534,7 +534,7 @@ Después de completar la instalación:
 
 ---
 
-**Última Actualización**: Diciembre 2025  
+**Última Actualización**: Diciembre 2025 
 **Autor**: @Jorgez-tech
 
 Si encuentras problemas no cubiertos en esta guía, por favor [abre un issue](https://github.com/Jorgez-tech/encuestas/issues) en GitHub.

@@ -28,11 +28,11 @@ Esta guía describe cómo desplegar el sistema de votación blockchain con Djang
 ### Ambientes
 
 ```
-Development  → Local, mock mode, SQLite
-    ↓
-Staging      → Similar a producción, testnet, PostgreSQL
-    ↓
-Production   → Mainnet, PostgreSQL, Redis, monitoring completo
+Development -> Local, mock mode, SQLite
+|
+Staging -> Similar a producción, testnet, PostgreSQL
+|
+Production -> Mainnet, PostgreSQL, Redis, monitoring completo
 ```
 
 ## Despliegue en Desarrollo
@@ -96,17 +96,17 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.28",
-  networks: {
-    sepolia: {
-      url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
-      accounts: [process.env.SEPOLIA_PRIVATE_KEY!],
-      chainId: 11155111,
-    },
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
+solidity: "0.8.28",
+networks: {
+sepolia: {
+url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
+accounts: [process.env.SEPOLIA_PRIVATE_KEY!],
+chainId: 11155111,
+},
+},
+etherscan: {
+apiKey: process.env.ETHERSCAN_API_KEY,
+},
 };
 
 export default config;
@@ -119,7 +119,7 @@ SEPOLIA_PRIVATE_KEY=0xYOUR_PRIVATE_KEY
 ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY
 ```
 
-⚠️ **NUNCA** commitear el archivo `.env` con claves reales.
+**NUNCA** commitear el archivo `.env` con claves reales.
 
 #### 3. Desplegar Smart Contract en Sepolia
 
@@ -138,7 +138,7 @@ npx hardhat verify --network sepolia <CONTRACT_ADDRESS>
 
 **Salida esperada**:
 ```
-✅ VotingContract deployed to: 0x1234567890abcdef...
+VotingContract deployed to: 0x1234567890abcdef...
 Gas used: 2,500,000
 Transaction hash: 0xabcdef...
 ```
@@ -148,11 +148,11 @@ Transaction hash: 0xabcdef...
 ```python
 # settings.py (o .env)
 BLOCKCHAIN_CONFIG = {
-    'WEB3_PROVIDER_URL': 'https://sepolia.infura.io/v3/YOUR-PROJECT-ID',
-    'CONTRACT_ADDRESS': '0x1234567890abcdef...',  # Tu contrato desplegado
-    'CHAIN_ID': 11155111,
-    'MOCK_MODE': False,
-    'OWNER_PRIVATE_KEY': os.getenv('SEPOLIA_PRIVATE_KEY'),  # Para crear preguntas
+'WEB3_PROVIDER_URL': 'https://sepolia.infura.io/v3/YOUR-PROJECT-ID',
+'CONTRACT_ADDRESS': '0x1234567890abcdef...', # Tu contrato desplegado
+'CHAIN_ID': 11155111,
+'MOCK_MODE': False,
+'OWNER_PRIVATE_KEY': os.getenv('SEPOLIA_PRIVATE_KEY'), # Para crear preguntas
 }
 ```
 
@@ -164,7 +164,7 @@ python manage.py blockchain_sync status
 
 **Salida esperada**:
 ```
-✅ Blockchain Connection: ACTIVE
+Blockchain Connection: ACTIVE
 Network: Sepolia Testnet
 Chain ID: 11155111
 Contract Address: 0x1234...
@@ -174,7 +174,7 @@ Contract Address: 0x1234...
 
 ### Preparación para Mainnet
 
-⚠️ **ADVERTENCIA**: Mainnet usa ETH real. Cada transacción tiene un costo monetario.
+**ADVERTENCIA**: Mainnet usa ETH real. Cada transacción tiene un costo monetario.
 
 #### Checklist de Seguridad
 
@@ -193,12 +193,12 @@ Contract Address: 0x1234...
 ```typescript
 // hardhat.config.ts
 networks: {
-  mainnet: {
-    url: process.env.MAINNET_RPC_URL || "https://mainnet.infura.io/v3/YOUR-PROJECT-ID",
-    accounts: [process.env.MAINNET_PRIVATE_KEY!],
-    chainId: 1,
-    gasPrice: "auto",  // O especifica un valor
-  },
+mainnet: {
+url: process.env.MAINNET_RPC_URL || "https://mainnet.infura.io/v3/YOUR-PROJECT-ID",
+accounts: [process.env.MAINNET_PRIVATE_KEY!],
+chainId: 1,
+gasPrice: "auto", // O especifica un valor
+},
 }
 ```
 
@@ -231,36 +231,36 @@ SECURE_HSTS_PRELOAD = True
 
 # Base de datos
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': '5432',
-    }
+'default': {
+'ENGINE': 'django.db.backends.postgresql',
+'NAME': os.getenv('DB_NAME'),
+'USER': os.getenv('DB_USER'),
+'PASSWORD': os.getenv('DB_PASSWORD'),
+'HOST': os.getenv('DB_HOST'),
+'PORT': '5432',
+}
 }
 
 # Cache con Redis
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.getenv('REDIS_URL'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
+'default': {
+'BACKEND': 'django_redis.cache.RedisCache',
+'LOCATION': os.getenv('REDIS_URL'),
+'OPTIONS': {
+'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+}
+}
 }
 
 # Blockchain (Mainnet)
 BLOCKCHAIN_CONFIG = {
-    'WEB3_PROVIDER_URL': os.getenv('MAINNET_RPC_URL'),
-    'CONTRACT_ADDRESS': os.getenv('CONTRACT_ADDRESS'),
-    'CHAIN_ID': 1,  # Mainnet
-    'MOCK_MODE': False,
-    'OWNER_PRIVATE_KEY': os.getenv('MAINNET_PRIVATE_KEY'),
-    'GAS_LIMIT': 500000,
-    'GAS_PRICE_GWEI': 50,  # Ajustar según condiciones de red
+'WEB3_PROVIDER_URL': os.getenv('MAINNET_RPC_URL'),
+'CONTRACT_ADDRESS': os.getenv('CONTRACT_ADDRESS'),
+'CHAIN_ID': 1, # Mainnet
+'MOCK_MODE': False,
+'OWNER_PRIVATE_KEY': os.getenv('MAINNET_PRIVATE_KEY'),
+'GAS_LIMIT': 500000,
+'GAS_PRICE_GWEI': 50, # Ajustar según condiciones de red
 }
 
 # Static files
@@ -285,19 +285,19 @@ MEDIA_URL = '/media/'
 version: '3.8'
 
 services:
-  web:
-    build: .
-    environment:
-      - DEBUG=False
-      - SECRET_KEY=${SECRET_KEY}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - MAINNET_RPC_URL=${MAINNET_RPC_URL}
-      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
-      - MAINNET_PRIVATE_KEY=${MAINNET_PRIVATE_KEY}
-    env_file:
-      - .env.production
+web:
+build: .
+environment:
+- DEBUG=False
+- SECRET_KEY=${SECRET_KEY}
+- DB_NAME=${DB_NAME}
+- DB_USER=${DB_USER}
+- DB_PASSWORD=${DB_PASSWORD}
+- MAINNET_RPC_URL=${MAINNET_RPC_URL}
+- CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
+- MAINNET_PRIVATE_KEY=${MAINNET_PRIVATE_KEY}
+env_file:
+- .env.production
 ```
 
 ## Plataformas de Hosting
@@ -309,37 +309,37 @@ services:
 #### Deployment con App Platform
 
 1. **Conectar Repositorio**:
-   - Login a DigitalOcean
-   - App Platform → Create App
-   - Seleccionar GitHub repository
+- Login a DigitalOcean
+- App Platform -> Create App
+- Seleccionar GitHub repository
 
 2. **Configurar App**:
-   ```yaml
-   name: encuestas-voting
-   services:
-   - name: web
-     github:
-       repo: Jorgez-tech/encuestas
-       branch: main
-     run_command: gunicorn encuestas.wsgi:application
-     environment_slug: python
-     instance_count: 1
-     instance_size_slug: basic-xxs
-     routes:
-     - path: /
-   ```
+```yaml
+name: encuestas-voting
+services:
+- name: web
+github:
+repo: Jorgez-tech/encuestas
+branch: main
+run_command: gunicorn encuestas.wsgi:application
+environment_slug: python
+instance_count: 1
+instance_size_slug: basic-xxs
+routes:
+- path: /
+```
 
 3. **Variables de Entorno**:
-   - Configurar en App Platform → Settings → Environment Variables
-   - Agregar todas las variables necesarias
+- Configurar en App Platform -> Settings -> Environment Variables
+- Agregar todas las variables necesarias
 
 4. **Base de Datos**:
-   - Agregar PostgreSQL Database
-   - Conectar automáticamente
+- Agregar PostgreSQL Database
+- Conectar automáticamente
 
 5. **Desplegar**:
-   - Click en "Deploy"
-   - Monitorear logs
+- Click en "Deploy"
+- Monitorear logs
 
 ### Heroku
 
@@ -460,9 +460,9 @@ runtime: python311
 entrypoint: gunicorn -b :$PORT encuestas.wsgi:application
 
 env_variables:
-  DEBUG: 'False'
-  SECRET_KEY: 'tu-secret-key'
-  # ... más variables
+DEBUG: 'False'
+SECRET_KEY: 'tu-secret-key'
+# ... más variables
 ```
 
 ### Docker + Docker Compose
@@ -472,48 +472,48 @@ env_variables:
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=encuestas_db
-      - POSTGRES_USER=encuestas_user
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+db:
+image: postgres:15
+volumes:
+- postgres_data:/var/lib/postgresql/data
+environment:
+- POSTGRES_DB=encuestas_db
+- POSTGRES_USER=encuestas_user
+- POSTGRES_PASSWORD=${DB_PASSWORD}
 
-  redis:
-    image: redis:7-alpine
+redis:
+image: redis:7-alpine
 
-  web:
-    build: .
-    command: gunicorn encuestas.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - static_volume:/app/static
-      - media_volume:/app/media
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env.production
-    depends_on:
-      - db
-      - redis
+web:
+build: .
+command: gunicorn encuestas.wsgi:application --bind 0.0.0.0:8000
+volumes:
+- static_volume:/app/static
+- media_volume:/app/media
+ports:
+- "8000:8000"
+env_file:
+- .env.production
+depends_on:
+- db
+- redis
 
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - static_volume:/var/www/static
-      - media_volume:/var/www/media
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - web
+nginx:
+image: nginx:alpine
+volumes:
+- ./nginx.conf:/etc/nginx/nginx.conf
+- static_volume:/var/www/static
+- media_volume:/var/www/media
+ports:
+- "80:80"
+- "443:443"
+depends_on:
+- web
 
 volumes:
-  postgres_data:
-  static_volume:
-  media_volume:
+postgres_data:
+static_volume:
+media_volume:
 ```
 
 **Comandos**:
@@ -543,41 +543,41 @@ docker-compose logs -f web
 name: Deploy to Production
 
 on:
-  push:
-    branches: [ main ]
+push:
+branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-      
-      - name: Run tests
-        run: |
-          python manage.py test
-        env:
-          BLOCKCHAIN_MOCK_MODE: True
-  
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Deploy to DigitalOcean
-        uses: digitalocean/app_action@main
-        with:
-          app_name: encuestas-voting
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+test:
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v3
+ 
+- name: Set up Python
+uses: actions/setup-python@v4
+with:
+python-version: '3.11'
+ 
+- name: Install dependencies
+run: |
+pip install -r requirements.txt
+ 
+- name: Run tests
+run: |
+python manage.py test
+env:
+BLOCKCHAIN_MOCK_MODE: True
+ 
+deploy:
+needs: test
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v3
+ 
+- name: Deploy to DigitalOcean
+uses: digitalocean/app_action@main
+with:
+app_name: encuestas-voting
+token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 ```
 
 ### GitLab CI/CD
@@ -585,27 +585,27 @@ jobs:
 **.gitlab-ci.yml**:
 ```yaml
 stages:
-  - test
-  - deploy
+- test
+- deploy
 
 test:
-  stage: test
-  image: python:3.11
-  script:
-    - pip install -r requirements.txt
-    - python manage.py test
-  variables:
-    BLOCKCHAIN_MOCK_MODE: "True"
+stage: test
+image: python:3.11
+script:
+- pip install -r requirements.txt
+- python manage.py test
+variables:
+BLOCKCHAIN_MOCK_MODE: "True"
 
 deploy_production:
-  stage: deploy
-  only:
-    - main
-  script:
-    - apt-get update -qy
-    - apt-get install -y ruby-dev
-    - gem install dpl
-    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+stage: deploy
+only:
+- main
+script:
+- apt-get update -qy
+- apt-get install -y ruby-dev
+- gem install dpl
+- dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
 ```
 
 ## Monitoreo y Mantenimiento
@@ -622,10 +622,10 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 sentry_sdk.init(
-    dsn=os.getenv('SENTRY_DSN'),
-    integrations=[DjangoIntegration()],
-    traces_sample_rate=1.0,
-    send_default_pii=True,
+dsn=os.getenv('SENTRY_DSN'),
+integrations=[DjangoIntegration()],
+traces_sample_rate=1.0,
+send_default_pii=True,
 )
 ```
 
@@ -634,33 +634,33 @@ sentry_sdk.init(
 ```python
 # settings.py
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/django/app.log',
-            'maxBytes': 1024*1024*15,  # 15MB
-            'backupCount': 10,
-            'formatter': 'verbose',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
+'version': 1,
+'disable_existing_loggers': False,
+'formatters': {
+'verbose': {
+'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+'style': '{',
+},
+},
+'handlers': {
+'file': {
+'level': 'INFO',
+'class': 'logging.handlers.RotatingFileHandler',
+'filename': '/var/log/django/app.log',
+'maxBytes': 1024*1024*15, # 15MB
+'backupCount': 10,
+'formatter': 'verbose',
+},
+'console': {
+'level': 'INFO',
+'class': 'logging.StreamHandler',
+'formatter': 'verbose',
+},
+},
+'root': {
+'handlers': ['console', 'file'],
+'level': 'INFO',
+},
 }
 ```
 
@@ -672,18 +672,18 @@ from django.http import JsonResponse
 from polls.blockchain.services import BlockchainVotingService
 
 def health_check(request):
-    service = BlockchainVotingService()
-    blockchain_status = service._check_connection()
-    
-    return JsonResponse({
-        'status': 'healthy',
-        'database': 'ok',
-        'blockchain': 'connected' if blockchain_status else 'disconnected',
-    })
+service = BlockchainVotingService()
+blockchain_status = service._check_connection()
+ 
+return JsonResponse({
+'status': 'healthy',
+'database': 'ok',
+'blockchain': 'connected' if blockchain_status else 'disconnected',
+})
 
 urlpatterns = [
-    path('health/', health_check),
-    # ...
+path('health/', health_check),
+# ...
 ]
 ```
 
@@ -718,16 +718,16 @@ from polls.blockchain.services import BlockchainVotingService
 
 @shared_task
 def monitor_blockchain():
-    service = BlockchainVotingService()
-    
-    if not service._check_connection():
-        # Enviar alerta
-        send_alert("Blockchain connection lost!")
-    
-    # Verificar gas prices
-    gas_price = service.web3.eth.gas_price
-    if gas_price > threshold:
-        send_alert(f"High gas price: {gas_price} Gwei")
+service = BlockchainVotingService()
+ 
+if not service._check_connection():
+# Enviar alerta
+send_alert("Blockchain connection lost!")
+ 
+# Verificar gas prices
+gas_price = service.web3.eth.gas_price
+if gas_price > threshold:
+send_alert(f"High gas price: {gas_price} Gwei")
 ```
 
 ## Troubleshooting en Producción
@@ -769,8 +769,8 @@ from web3 import Web3
 from web3.middleware import geth_poa_middleware
 
 w3 = Web3(Web3.HTTPProvider(
-    provider_url,
-    request_kwargs={'timeout': 60}  # Aumentar a 60 segundos
+provider_url,
+request_kwargs={'timeout': 60} # Aumentar a 60 segundos
 ))
 ```
 
@@ -791,7 +791,7 @@ w3 = Web3(Web3.HTTPProvider(
 - **Gas por crear pregunta**: ~$5-20 USD
 - **Gas por voto**: ~$1-5 USD
 
-⚠️ Los costos de gas varían según congestión de red.
+Los costos de gas varían según congestión de red.
 
 ## Recursos Adicionales
 
@@ -802,7 +802,7 @@ w3 = Web3(Web3.HTTPProvider(
 
 ---
 
-**Última Actualización**: Diciembre 2025  
+**Última Actualización**: Diciembre 2025 
 **Autor**: @Jorgez-tech
 
-**⚠️ IMPORTANTE**: Para deployment en mainnet con fondos reales, se recomienda contratar consultoría especializada y auditoría de seguridad.
+** IMPORTANTE**: Para deployment en mainnet con fondos reales, se recomienda contratar consultoría especializada y auditoría de seguridad.

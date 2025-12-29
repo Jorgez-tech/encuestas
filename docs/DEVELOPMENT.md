@@ -33,12 +33,12 @@ git remote add upstream https://github.com/Jorgez-tech/encuestas.git
 python -m venv venv
 
 # Activar
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate     # Windows
+source venv/bin/activate # Linux/macOS
+venv\Scripts\activate # Windows
 
 # Instalar dependencias de desarrollo
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # Si existe
+pip install -r requirements-dev.txt # Si existe
 ```
 
 ### 3. Instalar Pre-commit Hooks (Opcional)
@@ -56,7 +56,7 @@ pre-commit install
 
 ```bash
 # Crear archivo .env
-cp .env.example .env  # Si existe template
+cp .env.example .env # Si existe template
 
 # Editar .env con tus valores
 nano .env
@@ -75,57 +75,57 @@ WEB3_PROVIDER_URL=http://127.0.0.1:8545
 ```bash
 python manage.py migrate
 python manage.py createsuperuser
-python manage.py loaddata initial_data  # Si existe
+python manage.py loaddata initial_data # Si existe
 ```
 
 ## Estructura del Proyecto
 
 ```
 encuestas/
-├── blockchain/                 # Smart contracts y config Hardhat
-│   ├── contracts/             # Contratos Solidity
-│   │   └── VotingContract.sol
-│   ├── ignition/              # Módulos de deployment
-│   ├── scripts/               # Scripts de deployment
-│   ├── test/                  # Tests de contratos
-│   └── hardhat.config.ts      # Configuración Hardhat
-│
-├── encuestas/                 # Configuración Django
-│   ├── settings.py           # Settings principales
-│   ├── urls.py               # URLs principales
-│   ├── wsgi.py               # WSGI config
-│   └── asgi.py               # ASGI config
-│
-├── polls/                     # App principal de votaciones
-│   ├── blockchain/           # Integración blockchain
-│   │   ├── models.py         # Modelos blockchain-aware
-│   │   ├── services.py       # BlockchainVotingService
-│   │   ├── admin.py          # Admin customizado
-│   │   └── management/       # Comandos de gestión
-│   │       └── commands/
-│   │           └── blockchain_sync.py
-│   ├── migrations/           # Migraciones de DB
-│   ├── static/               # CSS, JS, imágenes
-│   ├── templates/            # Templates HTML
-│   ├── models.py             # Modelos Django tradicionales
-│   ├── views.py              # Views
-│   ├── admin.py              # Admin básico
-│   ├── urls.py               # URLs de la app
-│   └── tests.py              # Tests
-│
-├── static/                    # Static files globales
-├── docs/                      # Documentación
-│   ├── ARCHITECTURE.md
-│   ├── INSTALLATION.md
-│   ├── BLOCKCHAIN.md
-│   ├── DEVELOPMENT.md
-│   └── DEPLOYMENT.md
-│
-├── manage.py                  # Django management script
-├── requirements.txt           # Dependencias Python
-├── .env                       # Variables de entorno (no commitear)
-├── .gitignore
-└── README.md
+blockchain/ # Smart contracts y config Hardhat
+contracts/ # Contratos Solidity
+VotingContract.sol
+ignition/ # Módulos de deployment
+scripts/ # Scripts de deployment
+test/ # Tests de contratos
+hardhat.config.ts # Configuración Hardhat
+
+encuestas/ # Configuración Django
+settings.py # Settings principales
+urls.py # URLs principales
+wsgi.py # WSGI config
+asgi.py # ASGI config
+
+polls/ # App principal de votaciones
+blockchain/ # Integración blockchain
+models.py # Modelos blockchain-aware
+services.py # BlockchainVotingService
+admin.py # Admin customizado
+management/ # Comandos de gestión
+commands/
+blockchain_sync.py
+migrations/ # Migraciones de DB
+static/ # CSS, JS, imágenes
+templates/ # Templates HTML
+models.py # Modelos Django tradicionales
+views.py # Views
+admin.py # Admin básico
+urls.py # URLs de la app
+tests.py # Tests
+
+static/ # Static files globales
+docs/ # Documentación
+ARCHITECTURE.md
+INSTALLATION.md
+BLOCKCHAIN.md
+DEVELOPMENT.md
+DEPLOYMENT.md
+
+manage.py # Django management script
+requirements.txt # Dependencias Python
+.env # Variables de entorno (no commitear)
+.gitignore
+README.md
 ```
 
 ## Flujo de Trabajo
@@ -135,11 +135,11 @@ encuestas/
 Seguimos Git Flow:
 
 ```
-main                    # Producción estable
-  └── develop          # Desarrollo principal
-      ├── feature/*    # Nuevas características
-      ├── bugfix/*     # Corrección de bugs
-      └── hotfix/*     # Fixes urgentes para producción
+main # Producción estable
+develop # Desarrollo principal
+feature/* # Nuevas características
+bugfix/* # Corrección de bugs
+hotfix/* # Fixes urgentes para producción
 ```
 
 ### Crear una Nueva Feature
@@ -209,12 +209,12 @@ Seguimos [PEP 8](https://pep8.org/) con algunas excepciones:
 ```python
 # Variables y funciones: snake_case
 def calculate_total_votes(question_id):
-    total_votes = 0
-    return total_votes
+total_votes = 0
+return total_votes
 
 # Clases: PascalCase
 class BlockchainQuestion(models.Model):
-    pass
+pass
 
 # Constantes: UPPER_SNAKE_CASE
 MAX_CHOICES_PER_QUESTION = 10
@@ -223,24 +223,24 @@ MAX_CHOICES_PER_QUESTION = 10
 **3. Docstrings**:
 ```python
 def create_question(question_text: str, choices: List[str]) -> Dict:
-    """
-    Crea una pregunta en blockchain.
-    
-    Args:
-        question_text: Texto de la pregunta
-        choices: Lista de opciones de respuesta
-        
-    Returns:
-        Dict con resultado de la operación:
-        - success (bool): Si la operación fue exitosa
-        - transaction_hash (str): Hash de la transacción
-        - blockchain_id (int): ID en blockchain
-        
-    Raises:
-        ValueError: Si question_text está vacío
-        ConnectionError: Si no hay conexión blockchain
-    """
-    pass
+"""
+Crea una pregunta en blockchain.
+ 
+Args:
+question_text: Texto de la pregunta
+choices: Lista de opciones de respuesta
+ 
+Returns:
+Dict con resultado de la operación:
+- success (bool): Si la operación fue exitosa
+- transaction_hash (str): Hash de la transacción
+- blockchain_id (int): ID en blockchain
+ 
+Raises:
+ValueError: Si question_text está vacío
+ConnectionError: Si no hay conexión blockchain
+"""
+pass
 ```
 
 **4. Type Hints**:
@@ -248,7 +248,7 @@ def create_question(question_text: str, choices: List[str]) -> Dict:
 from typing import List, Dict, Optional, Union
 
 def get_results(question_id: int) -> Optional[Dict[str, Union[int, str]]]:
-    return {'total_votes': 10, 'status': 'active'}
+return {'total_votes': 10, 'status': 'active'}
 ```
 
 ### JavaScript/TypeScript (Smart Contracts)
@@ -264,18 +264,18 @@ pragma solidity ^0.8.28;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract VotingContract is Ownable {
-    // Order: state variables, events, modifiers, constructor, functions
-    
-    // State variables
-    uint256 public questionCount;
-    
-    // Events
-    event QuestionCreated(uint256 indexed questionId);
-    
-    // Constructor
-    constructor(address initialOwner) Ownable(initialOwner) {}
-    
-    // Functions: external, public, internal, private
+// Order: state variables, events, modifiers, constructor, functions
+ 
+// State variables
+uint256 public questionCount;
+ 
+// Events
+event QuestionCreated(uint256 indexed questionId);
+ 
+// Constructor
+constructor(address initialOwner) Ownable(initialOwner) {}
+ 
+// Functions: external, public, internal, private
 }
 ```
 
@@ -286,8 +286,8 @@ const deployedContract = await ethers.deployContract("VotingContract");
 
 // Use PascalCase for types and interfaces
 interface QuestionData {
-  text: string;
-  choices: string[];
+text: string;
+choices: string[];
 }
 ```
 
@@ -335,12 +335,12 @@ npx prettier --write 'contracts/**/*.sol'
 **Estructura**:
 ```
 polls/
-├── tests/
-│   ├── __init__.py
-│   ├── test_models.py
-│   ├── test_views.py
-│   ├── test_admin.py
-│   └── test_blockchain_integration.py
+tests/
+__init__.py
+test_models.py
+test_views.py
+test_admin.py
+test_blockchain_integration.py
 ```
 
 **Ejemplo de Test**:
@@ -350,31 +350,31 @@ from polls.models import Question
 from polls.blockchain.models import BlockchainQuestion
 
 class BlockchainQuestionTestCase(TestCase):
-    def setUp(self):
-        """Se ejecuta antes de cada test"""
-        self.question = BlockchainQuestion.objects.create(
-            question_text="Test Question",
-            pub_date=timezone.now()
-        )
-    
-    def test_question_creation(self):
-        """Test que verifica creación de pregunta"""
-        self.assertEqual(self.question.question_text, "Test Question")
-        self.assertFalse(self.question.is_synced)
-    
-    def test_sync_to_blockchain_mock(self):
-        """Test de sincronización en modo mock"""
-        result = self.question.sync_to_blockchain(mock=True)
-        self.assertTrue(result['success'])
-        
-        # Refrescar desde DB
-        self.question.refresh_from_db()
-        self.assertTrue(self.question.is_synced)
-        self.assertIsNotNone(self.question.blockchain_id)
-    
-    def tearDown(self):
-        """Se ejecuta después de cada test"""
-        self.question.delete()
+def setUp(self):
+"""Se ejecuta antes de cada test"""
+self.question = BlockchainQuestion.objects.create(
+question_text="Test Question",
+pub_date=timezone.now()
+)
+ 
+def test_question_creation(self):
+"""Test que verifica creación de pregunta"""
+self.assertEqual(self.question.question_text, "Test Question")
+self.assertFalse(self.question.is_synced)
+ 
+def test_sync_to_blockchain_mock(self):
+"""Test de sincronización en modo mock"""
+result = self.question.sync_to_blockchain(mock=True)
+self.assertTrue(result['success'])
+ 
+# Refrescar desde DB
+self.question.refresh_from_db()
+self.assertTrue(self.question.is_synced)
+self.assertIsNotNone(self.question.blockchain_id)
+ 
+def tearDown(self):
+"""Se ejecuta después de cada test"""
+self.question.delete()
 ```
 
 **Ejecutar Tests**:
@@ -397,7 +397,7 @@ python manage.py test --verbosity=2
 # Con coverage
 coverage run --source='polls' manage.py test
 coverage report
-coverage html  # Genera reporte HTML
+coverage html # Genera reporte HTML
 ```
 
 ### Tests de Smart Contracts
@@ -410,28 +410,28 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("VotingContract", function () {
-  it("Should create a question", async function () {
-    const VotingContract = await ethers.getContractFactory("VotingContract");
-    const contract = await VotingContract.deploy();
-    
-    const tx = await contract.createQuestion(
-      "Test Question",
-      ["Option 1", "Option 2"]
-    );
-    
-    await tx.wait();
-    
-    const questionCount = await contract.questionCount();
-    expect(questionCount).to.equal(1);
-  });
-  
-  it("Should allow voting", async function () {
-    // ... test implementation
-  });
-  
-  it("Should prevent double voting", async function () {
-    // ... test implementation
-  });
+it("Should create a question", async function () {
+const VotingContract = await ethers.getContractFactory("VotingContract");
+const contract = await VotingContract.deploy();
+ 
+const tx = await contract.createQuestion(
+"Test Question",
+["Option 1", "Option 2"]
+);
+ 
+await tx.wait();
+ 
+const questionCount = await contract.questionCount();
+expect(questionCount).to.equal(1);
+});
+ 
+it("Should allow voting", async function () {
+// ... test implementation
+});
+ 
+it("Should prevent double voting", async function () {
+// ... test implementation
+});
 });
 ```
 
@@ -461,39 +461,39 @@ from polls.blockchain.services import BlockchainVotingService
 from polls.blockchain.models import BlockchainQuestion
 
 class BlockchainIntegrationTest(TransactionTestCase):
-    def setUp(self):
-        # Usar modo mock para tests
-        self.service = BlockchainVotingService(mock_mode=True)
-    
-    def test_full_voting_flow(self):
-        """Test del flujo completo: crear pregunta -> votar -> obtener resultados"""
-        # 1. Crear pregunta
-        result = self.service.create_question(
-            "Integration Test",
-            ["A", "B", "C"]
-        )
-        self.assertTrue(result['success'])
-        
-        blockchain_id = result['blockchain_id']
-        
-        # 2. Votar
-        vote_result = self.service.vote(
-            blockchain_id, 
-            0, 
-            "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-        )
-        self.assertTrue(vote_result['success'])
-        
-        # 3. Verificar que ya votó
-        has_voted = self.service.has_voted(
-            blockchain_id,
-            "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-        )
-        self.assertTrue(has_voted)
-        
-        # 4. Obtener resultados
-        results = self.service.get_results(blockchain_id)
-        self.assertEqual(results['results'][0], 1)
+def setUp(self):
+# Usar modo mock para tests
+self.service = BlockchainVotingService(mock_mode=True)
+ 
+def test_full_voting_flow(self):
+"""Test del flujo completo: crear pregunta -> votar -> obtener resultados"""
+# 1. Crear pregunta
+result = self.service.create_question(
+"Integration Test",
+["A", "B", "C"]
+)
+self.assertTrue(result['success'])
+ 
+blockchain_id = result['blockchain_id']
+ 
+# 2. Votar
+vote_result = self.service.vote(
+blockchain_id, 
+0, 
+"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+)
+self.assertTrue(vote_result['success'])
+ 
+# 3. Verificar que ya votó
+has_voted = self.service.has_voted(
+blockchain_id,
+"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+)
+self.assertTrue(has_voted)
+ 
+# 4. Obtener resultados
+results = self.service.get_results(blockchain_id)
+self.assertEqual(results['results'][0], 1)
 ```
 
 ## Debugging
@@ -506,13 +506,13 @@ pip install django-debug-toolbar
 
 # settings.py
 INSTALLED_APPS = [
-    # ...
-    'debug_toolbar',
+# ...
+'debug_toolbar',
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # ...
+'debug_toolbar.middleware.DebugToolbarMiddleware',
+# ...
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
@@ -539,17 +539,17 @@ breakpoint()
 ```json
 // .vscode/launch.json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Django",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/manage.py",
-            "args": ["runserver", "8000"],
-            "django": true
-        }
-    ]
+"version": "0.2.0",
+"configurations": [
+{
+"name": "Django",
+"type": "python",
+"request": "launch",
+"program": "${workspaceFolder}/manage.py",
+"args": ["runserver", "8000"],
+"django": true
+}
+]
 }
 ```
 
@@ -560,9 +560,9 @@ breakpoint()
 import "hardhat/console.sol";
 
 function vote(uint256 _questionId, uint256 _choiceIndex) public {
-    console.log("Voting on question:", _questionId);
-    console.log("Choice index:", _choiceIndex);
-    // ... resto del código
+console.log("Voting on question:", _questionId);
+console.log("Choice index:", _choiceIndex);
+// ... resto del código
 }
 ```
 
@@ -583,31 +583,31 @@ console.log(result);
 ```python
 # settings.py
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'polls.blockchain': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-        },
-    },
+'version': 1,
+'disable_existing_loggers': False,
+'formatters': {
+'verbose': {
+'format': '{levelname} {asctime} {module} {message}',
+'style': '{',
+},
+},
+'handlers': {
+'console': {
+'class': 'logging.StreamHandler',
+'formatter': 'verbose',
+},
+'file': {
+'class': 'logging.FileHandler',
+'filename': 'debug.log',
+'formatter': 'verbose',
+},
+},
+'loggers': {
+'polls.blockchain': {
+'handlers': ['console', 'file'],
+'level': 'DEBUG',
+},
+},
 }
 ```
 
@@ -618,10 +618,10 @@ import logging
 logger = logging.getLogger('polls.blockchain')
 
 def create_question(self, text, choices):
-    logger.debug(f"Creating question: {text}")
-    logger.info(f"Question created with {len(choices)} choices")
-    logger.warning("Connection is slow")
-    logger.error("Failed to create question")
+logger.debug(f"Creating question: {text}")
+logger.info(f"Question created with {len(choices)} choices")
+logger.warning("Connection is slow")
+logger.error("Failed to create question")
 ```
 
 ## Contribuir
@@ -629,42 +629,42 @@ def create_question(self, text, choices):
 ### Proceso de Pull Request
 
 1. **Crear Issue** (opcional pero recomendado)
-   - Describe el problema o feature
-   - Discute el approach antes de codear
+- Describe el problema o feature
+- Discute el approach antes de codear
 
 2. **Fork y Branch**
-   ```bash
-   git checkout -b feature/mi-feature
-   ```
+```bash
+git checkout -b feature/mi-feature
+```
 
 3. **Desarrollar y Testear**
-   - Escribe código
-   - Agrega tests
-   - Asegura que todos los tests pasen
+- Escribe código
+- Agrega tests
+- Asegura que todos los tests pasen
 
 4. **Commit**
-   ```bash
-   git add .
-   git commit -m "feat: mi nueva feature"
-   ```
+```bash
+git add .
+git commit -m "feat: mi nueva feature"
+```
 
 5. **Push**
-   ```bash
-   git push origin feature/mi-feature
-   ```
+```bash
+git push origin feature/mi-feature
+```
 
 6. **Crear Pull Request**
-   - Descripción clara de cambios
-   - Referencias a issues
-   - Screenshots si hay cambios UI
+- Descripción clara de cambios
+- Referencias a issues
+- Screenshots si hay cambios UI
 
 7. **Code Review**
-   - Responde a comentarios
-   - Haz cambios solicitados
-   - Mantén PR actualizado con develop
+- Responde a comentarios
+- Haz cambios solicitados
+- Mantén PR actualizado con develop
 
 8. **Merge**
-   - Maintainer mergeará después de aprobación
+- Maintainer mergeará después de aprobación
 
 ### Checklist de PR
 
@@ -694,18 +694,18 @@ def create_question(self, text, choices):
 ### Herramientas Útiles
 
 - **VS Code Extensions**:
-  - Python
-  - Solidity (by Juan Blanco)
-  - Django Template
-  - GitLens
-  
+- Python
+- Solidity (by Juan Blanco)
+- Django Template
+- GitLens
+ 
 - **Browser Extensions**:
-  - MetaMask (wallet de prueba)
-  - Django Debug Panel
+- MetaMask (wallet de prueba)
+- Django Debug Panel
 
 ---
 
-**Última Actualización**: Diciembre 2025  
+**Última Actualización**: Diciembre 2025 
 **Autor**: @Jorgez-tech
 
 ¿Preguntas? Abre un [issue en GitHub](https://github.com/Jorgez-tech/encuestas/issues).
