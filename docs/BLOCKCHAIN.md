@@ -902,5 +902,5 @@ assert results['results'][0] == 1
 
 ---
 
-**Última Actualización**: Diciembre 2024  
+**Última Actualización**: Diciembre 2025  
 **Autor**: @Jorgez-tech

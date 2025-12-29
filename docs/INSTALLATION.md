@@ -534,7 +534,7 @@ Después de completar la instalación:
 
 ---
 
-**Última Actualización**: Diciembre 2024  
+**Última Actualización**: Diciembre 2025  
 **Autor**: @Jorgez-tech
 
 Si encuentras problemas no cubiertos en esta guía, por favor [abre un issue](https://github.com/Jorgez-tech/encuestas/issues) en GitHub.

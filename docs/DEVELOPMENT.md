@@ -41,12 +41,16 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt  # Si existe
 ```
 
-### 3. Instalar Pre-commit Hooks (Recomendado)
+### 3. Instalar Pre-commit Hooks (Opcional)
+
+Si el proyecto incluye un archivo `.pre-commit-config.yaml`, puedes instalar los hooks:
 
 ```bash
 pip install pre-commit
 pre-commit install
 ```
+
+**Nota**: Si no existe el archivo de configuración, puedes omitir este paso o crear uno personalizado según las necesidades del proyecto.
 
 ### 4. Configurar Variables de Entorno
 
@@ -701,7 +705,7 @@ def create_question(self, text, choices):
 
 ---
 
-**Última Actualización**: Diciembre 2024  
+**Última Actualización**: Diciembre 2025  
 **Autor**: @Jorgez-tech
 
 ¿Preguntas? Abre un [issue en GitHub](https://github.com/Jorgez-tech/encuestas/issues).

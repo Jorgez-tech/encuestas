@@ -802,7 +802,7 @@ w3 = Web3(Web3.HTTPProvider(
 
 ---
 
-**Última Actualización**: Diciembre 2024  
+**Última Actualización**: Diciembre 2025  
 **Autor**: @Jorgez-tech
 
 **⚠️ IMPORTANTE**: Para deployment en mainnet con fondos reales, se recomienda contratar consultoría especializada y auditoría de seguridad.

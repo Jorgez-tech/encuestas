@@ -556,6 +556,6 @@ if self.mock_mode or not self._check_connection():
 
 ---
 
-**Última Actualización**: Diciembre 2024  
+**Última Actualización**: Diciembre 2025  
 **Versión**: 1.0  
 **Autor**: @Jorgez-tech
