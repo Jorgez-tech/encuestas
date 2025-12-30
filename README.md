@@ -145,7 +145,6 @@ Blockchain (Ethereum/Hardhat)
 ## Enlaces y Demos
 
 - **Repositorio GitHub**: https://github.com/Jorgez-tech/encuestas
-- **Demo Estática**: https://jorgez-tech.github.io/encuestas/ (Solo visualización)
 - **Demo Funcional**: https://sea-turtle-app-f4lnd.ondigitalocean.app/polls/
 - **Documentación Completa**: [docs/](docs/)
 
