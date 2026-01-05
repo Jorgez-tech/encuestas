@@ -302,44 +302,7 @@ env_file:
 
 ## Plataformas de Hosting
 
-### DigitalOcean (Actual)
-
-**Documentado en README**: https://sea-turtle-app-f4lnd.ondigitalocean.app/polls/
-
-#### Deployment con App Platform
-
-1. **Conectar Repositorio**:
-- Login a DigitalOcean
-- App Platform -> Create App
-- Seleccionar GitHub repository
-
-2. **Configurar App**:
-```yaml
-name: encuestas-voting
-services:
-- name: web
-github:
-repo: Jorgez-tech/encuestas
-branch: main
-run_command: gunicorn encuestas.wsgi:application
-environment_slug: python
-instance_count: 1
-instance_size_slug: basic-xxs
-routes:
-- path: /
-```
-
-3. **Variables de Entorno**:
-- Configurar en App Platform -> Settings -> Environment Variables
-- Agregar todas las variables necesarias
-
-4. **Base de Datos**:
-- Agregar PostgreSQL Database
-- Conectar automáticamente
-
-5. **Desplegar**:
-- Click en "Deploy"
-- Monitorear logs
+> **Nota**: Este proyecto es una evolución Web3 de un proyecto anterior. Para información sobre despliegues legacy (DigitalOcean, Supabase, GitHub Pages), consulta [LEGACY_DEPLOYMENTS.md](archive/LEGACY_DEPLOYMENTS.md).
 
 ### Heroku
 
@@ -573,40 +536,11 @@ runs-on: ubuntu-latest
 steps:
 - uses: actions/checkout@v3
  
-- name: Deploy to DigitalOcean
-uses: digitalocean/app_action@main
-with:
-app_name: encuestas-voting
-token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+# Configurar aquí el deployment a tu plataforma preferida
+# Ver ejemplos en: https://github.com/actions
 ```
 
-### GitLab CI/CD
-
-**.gitlab-ci.yml**:
-```yaml
-stages:
-- test
-- deploy
-
-test:
-stage: test
-image: python:3.11
-script:
-- pip install -r requirements.txt
-- python manage.py test
-variables:
-BLOCKCHAIN_MOCK_MODE: "True"
-
-deploy_production:
-stage: deploy
-only:
-- main
-script:
-- apt-get update -qy
-- apt-get install -y ruby-dev
-- gem install dpl
-- dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
-```
+> **Nota**: Para configuraciones CI/CD de proyectos anteriores (GitLab CI, DigitalOcean Actions), consulta [LEGACY_DEPLOYMENTS.md](archive/LEGACY_DEPLOYMENTS.md).
 
 ## Monitoreo y Mantenimiento
 
@@ -776,14 +710,14 @@ request_kwargs={'timeout': 60} # Aumentar a 60 segundos
 
 ## Costos Estimados
 
-### Infrastructure (DigitalOcean)
+### Infrastructure (Estimado General)
 
-- **App Platform Basic**: $5-12/mes
-- **PostgreSQL DB**: $15/mes
-- **Redis**: $15/mes (opcional)
-- **Bandwidth**: Variable
+- **Hosting (VPS/PaaS)**: $5-20/mes
+- **PostgreSQL DB**: $15-25/mes
+- **Redis** (opcional): $15/mes
+- **Dominio**: $10-15/año
 
-**Total**: ~$35-45/mes
+**Total Backend**: ~$35-60/mes
 
 ### Blockchain (Mainnet)
 

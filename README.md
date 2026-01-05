@@ -142,11 +142,11 @@ Blockchain (Ethereum/Hardhat)
 3. **Elecciones Estudiantiles**: Sistema verificable y auditable
 4. **Polls Comunitarios**: Votaciones descentralizadas en comunidades
 
-## Enlaces y Demos
+## Enlaces
 
 - **Repositorio GitHub**: https://github.com/Jorgez-tech/encuestas
-- **Demo Funcional**: https://sea-turtle-app-f4lnd.ondigitalocean.app/polls/
 - **Documentación Completa**: [docs/](docs/)
+- **Historial de Despliegues**: [docs/archive/LEGACY_DEPLOYMENTS.md](docs/archive/LEGACY_DEPLOYMENTS.md)
 
 ## Contribución
 
