@@ -6,21 +6,34 @@ Este documento registra los despliegues exitosos del proyecto original de encues
 
 El proyecto "Encuestas Django" tuvo varias fases de desarrollo y despliegue:
 
-1. **Fase 1**: Desarrollo inicial en GitLab
-2. **Fase 2**: Despliegues en múltiples plataformas (GitHub Pages, DigitalOcean, Supabase)
-3. **Fase 3**: Evolución a proyecto Web3 (repositorio actual)
+1. **Fase 1**: Desarrollo inicial en GitHub (repositorio original)
+2. **Fase 2**: Despliegues exitosos desde GitHub (GitHub Pages, DigitalOcean, Supabase)
+3. **Fase 3**: Copia de respaldo en GitLab (preservación del primer proyecto exitoso)
+4. **Fase 4**: Evolución a proyecto Web3 en GitHub (repositorio actual)
 
-> **Nota**: El proyecto actual es una evolución completamente aislada enfocada en blockchain/Web3. Los despliegues documentados aquí corresponden a la versión tradicional del proyecto.
+> **Nota**: El proyecto actual es una evolución completamente aislada enfocada en blockchain/Web3. Los despliegues documentados aquí corresponden a la versión tradicional del proyecto, realizados cuando el proyecto aún no había evolucionado.
 
 ---
 
-## GitLab (Repositorio Original)
+## GitHub (Repositorio Original)
 
-El proyecto fue desarrollado originalmente en GitLab antes de migrar a GitHub para la versión Web3.
+El proyecto nació y se desarrolló en GitHub. Todos los despliegues exitosos se realizaron desde este repositorio.
 
-### Configuración CI/CD Original
+- **Repositorio**: https://github.com/Jorgez-tech/encuestas
+- **Estado**: Evolucionado a Web3 (mismo repositorio)
 
-**.gitlab-ci.yml**:
+---
+
+## GitLab (Copia de Respaldo)
+
+Se guardó una copia del proyecto en GitLab como respaldo del primer proyecto exitoso del autor, preservando el estado original antes de la transformación Web3.
+
+- **Propósito**: Preservación histórica
+- **Contenido**: Versión Django tradicional (sin blockchain)
+
+### Configuración CI/CD de Referencia
+
+**.gitlab-ci.yml** (ejemplo de configuración):
 ```yaml
 stages:
   - test
@@ -48,23 +61,24 @@ deploy_production:
 
 ## GitHub Pages
 
-Se desplegó una demo estática del frontend en GitHub Pages.
+Se desplegó una demo estática del frontend en GitHub Pages desde el repositorio original.
 
-- **URL**: (demo estática - ya no disponible)
 - **Rama**: `gh-pages`
 - **Contenido**: Archivos estáticos HTML/CSS/JS para demostración
+- **Desplegado desde**: GitHub (repositorio original)
 - **Estado**: Archivado
 
 ### Notas
-La rama `gh-pages` aún existe en el repositorio pero corresponde al proyecto anterior, no a la versión Web3.
+La rama `gh-pages` aún existe en el repositorio pero corresponde al proyecto anterior (pre-Web3).
 
 ---
 
 ## DigitalOcean App Platform
 
-Despliegue exitoso de la aplicación Django completa.
+Despliegue exitoso de la aplicación Django completa desde GitHub.
 
 - **URL**: `https://sea-turtle-app-f4lnd.ondigitalocean.app/polls/`
+- **Desplegado desde**: GitHub (repositorio original)
 - **Estado**: Desplegado exitosamente (proyecto anterior)
 
 ### Configuración Utilizada
@@ -123,6 +137,7 @@ Se utilizó Supabase como alternativa de base de datos PostgreSQL gestionada.
 
 - **Uso**: Base de datos PostgreSQL
 - **Integración**: Django con `dj-database-url`
+- **Desplegado desde**: GitHub (repositorio original)
 - **Estado**: Despliegue exitoso
 
 ### Configuración Django para Supabase
@@ -144,10 +159,11 @@ DATABASES = {
 
 ## Lecciones Aprendidas
 
-1. **DigitalOcean App Platform**: Excelente para Django, fácil configuración con GitHub
-2. **Supabase**: Buena alternativa gratuita para PostgreSQL en proyectos pequeños
-3. **GitHub Pages**: Solo útil para contenido estático, no para aplicaciones Django
-4. **GitLab CI/CD**: Robusto pero migrado a GitHub Actions para mejor integración
+1. **GitHub como origen**: Todos los despliegues se realizaron desde GitHub
+2. **DigitalOcean App Platform**: Excelente para Django, fácil integración con GitHub
+3. **Supabase**: Buena alternativa gratuita para PostgreSQL en proyectos pequeños
+4. **GitHub Pages**: Útil para contenido estático y demos
+5. **GitLab como backup**: Ideal para preservar versiones históricas de proyectos exitosos
 
 ---
 
