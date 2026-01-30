@@ -4,6 +4,11 @@ from django.urls import reverse
 from django.contrib import messages
 from .models import Question, Choice
 
+from django.conf import settings
+# Architecture imports
+from polls.adapters.repositories import DjangoQuestionRepository, DjangoVoteRepository
+from core.use_cases.voting import GetQuestionResultsUseCase
+
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
     context = {'latest_question_list': latest_question_list}
@@ -61,3 +66,32 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+# Web3 Views using Clean Architecture
+
+def web3_detail(request, question_id):
+    repo = DjangoQuestionRepository()
+    question_entity = repo.get_by_id(question_id)
+
+    if not question_entity:
+        return HttpResponse("Question not found", status=404)
+
+    contract_address = getattr(settings, 'BLOCKCHAIN_CONTRACT_ADDRESS', '')
+
+    return render(request, 'polls/detail_web3.html', {
+        'question': question_entity,
+        'contract_address': contract_address
+    })
+
+def web3_results(request, question_id):
+    question_repo = DjangoQuestionRepository()
+    vote_repo = DjangoVoteRepository()
+    use_case = GetQuestionResultsUseCase(question_repo, vote_repo)
+
+    try:
+        results = use_case.execute(question_id)
+        # Transform results to match template expectations if needed,
+        # or use a new template. results_web3.html
+        return render(request, 'polls/results_web3.html', {'results': results})
+    except ValueError:
+        return HttpResponse("Question not found", status=404)

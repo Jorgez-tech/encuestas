@@ -1,0 +1,80 @@
+<!-- polls/templates/polls/detail_web3.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ question.text }} - Votación Web3</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+    <style>
+        .voting-form { background: #f8f9fa; padding: 2rem; border-radius: 10px; margin: 1rem 0; }
+        .choice-item { margin: 1rem 0; padding: 1rem; background: white; border-radius: 8px; border: 2px solid #e9ecef; transition: all 0.3s ease; }
+        .choice-item:hover { border-color: #667eea; transform: translateX(5px); }
+        .choice-item input[type="radio"] { margin-right: 1rem; transform: scale(1.2); }
+        .choice-label { font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; }
+        .submit-button { background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; margin-top: 1.5rem; }
+        .submit-button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4); }
+        .submit-button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .error-message { color: #dc3545; background: #f8d7da; padding: 1rem; border-radius: 5px; margin: 1rem 0; border: 1px solid #f5c6cb; }
+        .back-link { display: inline-block; color: #667eea; text-decoration: none; margin-bottom: 1rem; font-weight: 500; }
+        .status-message { padding: 1rem; border-radius: 5px; margin: 1rem 0; }
+        .status-info { background: #e0f2fe; color: #0369a1; }
+        .status-success { background: #dcfce7; color: #15803d; }
+        .status-error { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'polls:index' %}" class="back-link">← Volver a encuestas</a>
+
+        <h1>{{ question.text }} <span style="font-size: 0.6em; color: #667eea;">(Blockchain)</span></h1>
+        <p class="publish-date">Publicado el: {{ question.pub_date|date:"d/m/Y H:i" }}</p>
+        <p>Blockchain ID: {{ question.blockchain_id }}</p>
+
+        <div id="wallet-status" class="status-message status-info">
+            Conectando wallet...
+        </div>
+
+        <form id="voting-form" class="voting-form">
+            <h3>Selecciona tu opción:</h3>
+
+            {% for choice in question.choices %}
+                <div class="choice-item">
+                    <label class="choice-label" for="choice{{ forloop.counter0 }}">
+                        <input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">
+                        {{ choice.text }}
+                    </label>
+                </div>
+            {% endfor %}
+
+            <button type="button" id="vote-button" class="submit-button" disabled>Votar en Blockchain</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <script>
+        const QUESTION_ID = {{ question.blockchain_id }};
+        const CONTRACT_ADDRESS = "{{ contract_address }}";
+        const ABI = [
+            "function vote(uint256 _questionId, uint256 _choiceIndex) external",
+            "function hasUserVoted(address _user, uint256 _questionId) view returns (bool)"
+        ];
+
+        // Add UI logic for selection
+        document.querySelectorAll('.choice-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                document.querySelectorAll('.choice-item').forEach(el => {
+                    el.style.borderColor = '#e9ecef';
+                    el.style.background = 'white';
+                });
+                this.style.borderColor = '#667eea';
+                this.style.background = '#f0f2ff';
+            });
+        });
+    </script>
+    <script src="{% static 'polls/web3_integration.js' %}"></script>
+</body>
+</html>

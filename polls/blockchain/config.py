@@ -12,7 +12,7 @@ import os
 HARDHAT_RPC_URL = "http://127.0.0.1:8545"  # Default Hardhat Network URL
 
 # Contract deployment details (from our successful deployment)
-VOTING_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+VOTING_CONTRACT_ADDRESS = getattr(settings, 'BLOCKCHAIN_CONTRACT_ADDRESS', "0x5FbDB2315678afecb367f032d93F642f64180aa3")
 
 # For testing without external Hardhat node
 USE_MOCK_BLOCKCHAIN = True  # Set to False when Hardhat Network is running
