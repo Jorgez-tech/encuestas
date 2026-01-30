@@ -5,7 +5,7 @@ Estos tests validan la lógica de negocio pura sin dependencias de Django.
 Utilizan implementaciones in-memory de los repositorios.
 """
 
-import pytest
+from django.test import TestCase
 from datetime import datetime
 from core.domain.entities import Question, Choice, Vote
 from core.use_cases.sync import SyncVotesUseCase
@@ -60,7 +60,7 @@ class InMemoryVoteRepository:
         return [v for v in self.votes if v.question_id == question_id]
 
 
-class TestSyncVotesUseCase:
+class TestSyncVotesUseCase(TestCase):
     """Tests para el caso de uso de sincronización de votos"""
     
     def test_sync_votes_basic(self):
@@ -202,7 +202,7 @@ class TestSyncVotesUseCase:
         assert count == 2, "Debe sincronizar solo votos desde bloque 2"
 
 
-class TestGetQuestionResultsUseCase:
+class TestGetQuestionResultsUseCase(TestCase):
     """Tests para el caso de uso de obtención de resultados"""
     
     def test_get_results_no_votes(self):
@@ -285,11 +285,11 @@ class TestGetQuestionResultsUseCase:
         use_case = GetQuestionResultsUseCase(question_repo, vote_repo)
         
         # Act & Assert
-        with pytest.raises(ValueError, match="not found"):
+        with self.assertRaisesRegex(ValueError, "not found"):
             use_case.execute(999)
 
 
-class TestMockBlockchainGateway:
+class TestMockBlockchainGateway(TestCase):
     """Tests para el gateway mock de blockchain"""
     
     def test_create_question(self):

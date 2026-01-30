@@ -78,32 +78,59 @@ Este sistema utiliza una arquitectura híbrida:
 
 ```
 
-Frontend (HTML/JS) 
-- Interfaz de usuario 
-- Integración Web3 (MetaMask) 
+## Arquitectura
 
-|
+### Clean Architecture (Enero 2026)
 
-Backend Django 
-- Admin panel 
-- API REST 
-- Gestión de usuarios 
-- Base de datos SQLite/PostgreSQL 
+El sistema implementa **Clean Architecture** siguiendo los principios de Uncle Bob, con separación clara de capas:
 
-|
+**Estructura de Capas:**
+```
+┌─────────────────────────────────────────────────────────┐
+│  Domain Layer (core/domain/)                            │
+│  - Entities: Question, Choice, Vote (dataclasses)       │
+│  - Interfaces: Repositories & Gateways (ABC)            │
+│  ✓ Sin dependencias de frameworks                       │
+└─────────────────────────────────────────────────────────┘
+                         ▲
+┌─────────────────────────────────────────────────────────┐
+│  Use Cases Layer (core/use_cases/)                      │
+│  - SyncVotesUseCase: Sincroniza blockchain → DB         │
+│  - GetQuestionResultsUseCase: Calcula resultados        │
+│  ✓ Lógica de negocio pura, 12 tests unitarios           │
+└─────────────────────────────────────────────────────────┘
+                         ▲
+┌─────────────────────────────────────────────────────────┐
+│  Adapters Layer (polls/adapters/)                       │
+│  - Django ORM Repositories                              │
+│  - Web3 & Mock Blockchain Gateways                      │
+└─────────────────────────────────────────────────────────┘
+                         ▲
+┌─────────────────────────────────────────────────────────┐
+│  Infrastructure (Django + Ethereum)                     │
+│  - Views, Admin, Models | Smart Contracts               │
+└─────────────────────────────────────────────────────────┘
+```
 
-Capa de Integración (Web3.py) 
-- BlockchainVotingService 
-- Sincronización automática 
-- Modo mock para desarrollo 
+**Beneficios:**
+- ✅ **Tests sin DB/Blockchain**: 12 tests unitarios rápidos
+- ✅ **Código desacoplado**: Cambiar frameworks sin romper lógica
+- ✅ **Idempotencia**: Sincronización segura con tx_hash+log_index
+- ✅ **MockGateway**: Desarrollo local sin nodo Ethereum
 
-|
+Ver [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para detalles completos.
 
-Blockchain (Ethereum/Hardhat) 
-- Smart Contract (Solidity) 
-- VotingContract.sol 
-- OpenZeppelin (seguridad) 
+### Comandos de Gestión
 
+```bash
+# Sincronizar votos desde blockchain
+python manage.py run_reconciliation --from-block=0
+
+# Ejecutar suite de tests (12 tests)
+python manage.py test core.tests.test_use_cases -v 2
+
+# Crear pregunta en blockchain
+python manage.py blockchain_sync create_question <question_id>
 ```
 
 ## Tecnologías Utilizadas
@@ -127,13 +154,25 @@ Blockchain (Ethereum/Hardhat)
 
 ## Estado del Proyecto
 
-- **Fase 1**: Aplicación Django básica de encuestas
-- **Fase 2**: Smart contracts desarrollados y desplegados
-- **Fase 3**: Integración Django <-> Blockchain completada
-- **Fase 4**: Panel de administración blockchain
-- **Fase 5**: Comandos de gestión y sincronización
-- **Fase 6**: Frontend Web3 con wallet connection (en progreso)
-- **Fase 7**: Deploy en testnet/mainnet (planeado)
+### ✅ Actualización: Clean Architecture (30 Enero 2026)
+
+**Migración completada exitosamente**:
+- ✅ Implementada Clean Architecture con separación de capas (Domain, Use Cases, Adapters)
+- ✅ 12 tests unitarios en core/tests/test_use_cases.py (100% passing)
+- ✅ MockBlockchainGateway para desarrollo sin nodo Ethereum
+- ✅ Sincronización idempotente (tx_hash + log_index)
+- ✅ Transacciones atómicas en repositorios (@transaction.atomic)
+- ✅ Documentación actualizada en docs/ARCHITECTURE.md
+
+**Fases del Proyecto:**
+- **Fase 1**: ✅ Aplicación Django básica de encuestas
+- **Fase 2**: ✅ Smart contracts desarrollados y desplegados
+- **Fase 3**: ✅ Integración Django <-> Blockchain completada
+- **Fase 4**: ✅ Panel de administración blockchain
+- **Fase 5**: ✅ Comandos de gestión y sincronización
+- **Fase 6**: ✅ Clean Architecture implementada (Enero 2026)
+- **Fase 7**: 🔄 Frontend Web3 con wallet connection (en progreso)
+- **Fase 8**: 📋 Deploy en testnet/mainnet (planeado)
 
 ## Casos de Uso
 

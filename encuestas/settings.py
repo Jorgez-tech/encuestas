@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']  # Add localhost y 127.
 
 INSTALLED_APPS = [
     'polls',
+    'core',  # Clean Architecture domain and use cases
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
