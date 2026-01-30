@@ -264,12 +264,16 @@ class BlockchainVote(models.Model):
     voter_address = models.CharField(max_length=42, help_text="Ethereum wallet address")
     transaction_hash = models.CharField(max_length=66)
     block_number = models.IntegerField(null=True, blank=True)
+    log_index = models.IntegerField(default=0, help_text="Event log index for idempotency")
     timestamp = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         verbose_name = "Blockchain Vote"
         verbose_name_plural = "Blockchain Votes"
         unique_together = ['question', 'voter_address']  # One vote per address per question
+        indexes = [
+            models.Index(fields=['transaction_hash', 'log_index'], name='tx_log_index_idx'),
+        ]
         ordering = ['-timestamp']
     
     def __str__(self):

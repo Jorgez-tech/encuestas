@@ -20,4 +20,8 @@ urlpatterns = [
     path('blockchain/status/', blockchain_views.blockchain_status, name='blockchain_status'),
     path('blockchain/create/', blockchain_views.create_blockchain_question, name='create_blockchain_question'),
     path('blockchain/sync/<int:question_id>/', blockchain_views.sync_question_to_blockchain, name='sync_to_blockchain'),
+
+    # New Clean Architecture Web3 Views
+    path('web3/<int:question_id>/', views.web3_detail, name='web3_detail'),
+    path('web3/<int:question_id>/results/', views.web3_results, name='web3_results'),
 ]

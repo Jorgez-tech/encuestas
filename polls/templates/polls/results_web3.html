@@ -1,0 +1,55 @@
+<!-- polls/templates/polls/results_web3.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados Blockchain - {{ results.question_text }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/styles.css' %}">
+    <style>
+        .result-item { margin-bottom: 1.5rem; }
+        .result-label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-weight: 500; }
+        .progress-bar-bg { background: #e9ecef; border-radius: 10px; height: 10px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); height: 100%; border-radius: 10px; transition: width 1s ease-in-out; }
+        .percentage { text-align: right; font-size: 0.9rem; color: #666; margin-top: 0.2rem; }
+        .total-votes { text-align: center; font-weight: bold; margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; }
+        .back-link { display: inline-block; color: #667eea; text-decoration: none; margin-bottom: 1rem; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'polls:index' %}" class="back-link">← Volver a encuestas</a>
+
+        <h1>Resultados <span style="font-size: 0.6em; color: #667eea;">(Blockchain)</span></h1>
+        <h2>{{ results.question_text }}</h2>
+
+        <div class="results-container" style="margin-top: 2rem;">
+            {% for choice in results.choices %}
+            <div class="result-item">
+                <div class="result-label">
+                    <span>{{ choice.text }}</span>
+                    <span>{{ choice.votes }} votos</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: {{ choice.percentage }}%;"></div>
+                </div>
+                <div class="percentage">{{ choice.percentage }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="total-votes">
+            Total de votos verificados: {{ results.total_votes }}
+        </div>
+
+        {% if not results.is_synced %}
+        <div style="text-align: center; color: orange; margin-top: 1rem;">
+            ⚠️ Algunos votos pueden estar pendientes de sincronización.
+        </div>
+        {% endif %}
+
+        <a href="{% url 'polls:index' %}" class="vote-button" style="text-align: center; display: block; margin-top: 2rem; width: fit-content; margin-left: auto; margin-right: auto; text-decoration: none;">Volver al Inicio</a>
+    </div>
+</body>
+</html>
