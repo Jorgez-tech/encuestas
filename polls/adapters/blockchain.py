@@ -109,3 +109,92 @@ class Web3BlockchainGateway(IBlockchainGateway):
             return self.web3.eth.block_number
         except Exception:
             return 0
+
+
+class MockBlockchainGateway(IBlockchainGateway):
+    """Gateway simulado para testing sin blockchain real
+    
+    Este gateway permite ejecutar tests y desarrollo sin necesidad de
+    tener un nodo blockchain corriendo. Simula transacciones y eventos.
+    """
+    
+    def __init__(self):
+        self._mock_events: List[Dict[str, Any]] = []
+        self._mock_questions: Dict[int, Dict[str, Any]] = {}
+        self._current_block = 0
+        logger.info("MockBlockchainGateway initialized")
+    
+    def fetch_vote_events(self, from_block: int) -> List[Dict[str, Any]]:
+        """Retorna eventos simulados desde el bloque especificado"""
+        filtered_events = [
+            e for e in self._mock_events 
+            if e['block_number'] >= from_block
+        ]
+        logger.info(f"[MOCK] Fetched {len(filtered_events)} vote events from block {from_block}")
+        return filtered_events
+    
+    def create_question(self, text: str, choices: List[str]) -> Dict[str, Any]:
+        """Simula creación de pregunta en blockchain"""
+        import hashlib
+        import time
+        
+        mock_id = len(self._mock_questions)
+        mock_tx = "0x" + hashlib.sha256(
+            f"{text}{time.time()}".encode()
+        ).hexdigest()
+        
+        self._mock_questions[mock_id] = {
+            'text': text,
+            'choices': choices,
+            'created_at': time.time()
+        }
+        
+        logger.info(f"[MOCK] Created question {mock_id}: {text}")
+        
+        return {
+            "success": True,
+            "question_id": mock_id,
+            "transaction_hash": mock_tx
+        }
+    
+    def get_current_block_number(self) -> int:
+        """Retorna número de bloque simulado"""
+        return self._current_block
+    
+    # Métodos helper para testing
+    def add_mock_vote_event(self, question_id: int, choice_index: int, 
+                           voter: str, tx_hash: str = None):
+        """Agrega evento de voto simulado para testing
+        
+        Args:
+            question_id: ID de la pregunta en blockchain
+            choice_index: Índice de la opción votada
+            voter: Dirección de la wallet del votante
+            tx_hash: Hash de transacción (opcional, se genera si no se provee)
+        """
+        if tx_hash is None:
+            import hashlib, time
+            tx_hash = "0x" + hashlib.sha256(
+                f"{question_id}{choice_index}{voter}{time.time()}".encode()
+            ).hexdigest()
+        
+        self._current_block += 1
+        
+        event = {
+            'question_id': question_id,
+            'choice_index': choice_index,
+            'voter': voter,
+            'tx_hash': tx_hash,
+            'block_number': self._current_block,
+            'log_index': len(self._mock_events)
+        }
+        
+        self._mock_events.append(event)
+        logger.info(f"[MOCK] Added vote event for question {question_id} by {voter}")
+    
+    def reset(self):
+        """Resetea estado del mock - útil para tests"""
+        self._mock_events.clear()
+        self._mock_questions.clear()
+        self._current_block = 0
+        logger.info("[MOCK] Gateway reset")

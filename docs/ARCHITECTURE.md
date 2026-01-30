@@ -5,6 +5,7 @@ Este documento describe la arquitectura técnica del sistema de votación blockc
 ## Tabla de Contenidos
 
 - [Visión General](#visión-general)
+- [Clean Architecture Implementation](#clean-architecture-implementation)
 - [Capas del Sistema](#capas-del-sistema)
 - [Componentes Principales](#componentes-principales)
 - [Flujo de Datos](#flujo-de-datos)
@@ -24,6 +25,312 @@ El sistema implementa una **arquitectura híbrida** que combina:
 2. **Degradación Elegante**: Sistema funcional incluso sin blockchain (modo mock)
 3. **Sincronización Eventual**: Los datos se sincronizan de forma asíncrona
 4. **Seguridad por Capas**: Validación tanto en Django como en smart contracts
+
+## Clean Architecture Implementation
+
+El proyecto implementa **Clean Architecture** (Uncle Bob) para separar la lógica de negocio de los detalles de implementación. Esto permite:
+
+- **Independencia de frameworks**: La lógica de negocio no depende de Django o Web3
+- **Testabilidad**: Casos de uso testeables sin infraestructura
+- **Flexibilidad**: Fácil cambiar implementaciones sin afectar el dominio
+- **Mantenibilidad**: Código más claro y organizado
+
+### Estructura de Capas Clean Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Presentation Layer                        │
+│              (Django Views, Templates, Admin)                │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────────┐
+│                   Application Layer                          │
+│                (Use Cases / Casos de Uso)                    │
+│  • SyncVotesUseCase: Sincronización blockchain → DB         │
+│  • GetQuestionResultsUseCase: Cálculo de resultados         │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────────┐
+│                     Domain Layer                             │
+│              (Entities & Interfaces puras)                   │
+│  • Entities: Question, Choice, Vote                         │
+│  • Interfaces: IQuestionRepository, IVoteRepository,        │
+│                IBlockchainGateway                            │
+└─────────────────────────────────────────────────────────────┘
+                         ▲
+┌────────────────────────┴────────────────────────────────────┐
+│                  Infrastructure Layer                        │
+│                 (Adapters & Frameworks)                      │
+│  • DjangoQuestionRepository: Django ORM                     │
+│  • DjangoVoteRepository: Django ORM                         │
+│  • Web3BlockchainGateway: Web3.py                           │
+│  • MockBlockchainGateway: Testing                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Domain Layer (`core/domain/`)
+
+**Entidades (Entities):**
+```python
+@dataclass
+class Question:
+    id: Optional[int]
+    text: str
+    pub_date: datetime
+    choices: List[Choice]
+    blockchain_id: Optional[int] = None
+    is_synced: bool = False
+    tx_hash: Optional[str] = None
+
+@dataclass
+class Vote:
+    question_id: int
+    choice_index: int
+    voter_address: str
+    transaction_hash: str
+    block_number: int
+    log_index: int  # Para idempotencia
+    timestamp: Optional[datetime] = None
+```
+
+**Características:**
+- Sin dependencias externas (solo Python estándar)
+- Inmutables (dataclasses)
+- Representan conceptos del negocio
+- Reglas de negocio puras
+
+**Interfaces (Contracts):**
+```python
+class IBlockchainGateway(ABC):
+    @abstractmethod
+    def fetch_vote_events(self, from_block: int) -> List[Dict[str, Any]]:
+        """Obtiene eventos de votación desde blockchain"""
+        pass
+    
+    @abstractmethod
+    def create_question(self, text: str, choices: List[str]) -> Dict[str, Any]:
+        """Crea pregunta en blockchain"""
+        pass
+```
+
+### Application Layer (`core/use_cases/`)
+
+**Use Case: SyncVotesUseCase**
+
+Sincroniza votos desde blockchain a la base de datos con idempotencia:
+
+```python
+class SyncVotesUseCase:
+    def execute(self, from_block: int = 0) -> int:
+        events = self.blockchain_gateway.fetch_vote_events(from_block)
+        new_votes_count = 0
+        
+        for event in events:
+            # Verificar idempotencia
+            if self.vote_repo.exists(event['tx_hash'], event['log_index']):
+                continue
+            
+            # Obtener pregunta asociada
+            question = self.question_repo.get_by_blockchain_id(
+                event['question_id']
+            )
+            
+            if question:
+                vote = Vote(...)
+                self.vote_repo.save(vote)
+                new_votes_count += 1
+        
+        return new_votes_count
+```
+
+**Características:**
+- Orquesta entidades y repositorios
+- Lógica de aplicación pura
+- Sin dependencias de frameworks
+- Testeable con mocks in-memory
+
+**Use Case: GetQuestionResultsUseCase**
+
+Calcula y formatea resultados de votación:
+
+```python
+class GetQuestionResultsUseCase:
+    def execute(self, question_id: int) -> Dict[str, Any]:
+        question = self.question_repo.get_by_id(question_id)
+        votes = self.vote_repo.get_votes_for_question(question_id)
+        
+        # Agregar votos por opción
+        vote_counts = {i: 0 for i in range(len(question.choices))}
+        for vote in votes:
+            vote_counts[vote.choice_index] += 1
+        
+        # Calcular porcentajes y formatear
+        return {
+            'question_text': question.text,
+            'total_votes': len(votes),
+            'choices': [...],  # Con votos y porcentajes
+            'is_synced': question.is_synced
+        }
+```
+
+### Infrastructure Layer (`polls/adapters/`)
+
+**Repositorios Django:**
+
+Implementan las interfaces del dominio usando Django ORM:
+
+```python
+class DjangoVoteRepository(IVoteRepository):
+    @transaction.atomic  # Garantiza atomicidad
+    def save(self, vote: VoteEntity) -> VoteEntity:
+        question = BlockchainQuestion.objects.get(pk=vote.question_id)
+        BlockchainVote.objects.create(
+            question=question,
+            choice_index=vote.choice_index,
+            voter_address=vote.voter_address,
+            transaction_hash=vote.transaction_hash,
+            block_number=vote.block_number,
+            log_index=vote.log_index
+        )
+        return vote
+```
+
+**Características:**
+- Conversión Entity ↔ Django Model
+- Manejo de transacciones
+- Validación de integridad referencial
+
+**Gateway Web3:**
+
+Encapsula comunicación con blockchain:
+
+```python
+class Web3BlockchainGateway(IBlockchainGateway):
+    def fetch_vote_events(self, from_block: int):
+        events = self.contract.events.VoteCast().get_logs(
+            fromBlock=from_block
+        )
+        
+        return [{
+            'question_id': event['args']['questionId'],
+            'choice_index': event['args']['choiceIndex'],
+            'voter': event['args']['voter'],
+            'tx_hash': event['transactionHash'].hex(),
+            'block_number': event['blockNumber'],
+            'log_index': event['logIndex']
+        } for event in events]
+```
+
+**Mock Gateway para Testing:**
+
+```python
+class MockBlockchainGateway(IBlockchainGateway):
+    """Gateway simulado sin blockchain real"""
+    
+    def add_mock_vote_event(self, question_id, choice_index, voter):
+        """Helper para agregar eventos en tests"""
+        self._mock_events.append({...})
+    
+    def reset(self):
+        """Limpia estado entre tests"""
+        self._mock_events.clear()
+```
+
+### Dependency Injection
+
+Las dependencias se inyectan en las vistas:
+
+```python
+# polls/views.py
+def web3_results(request, question_id):
+    # Crear instancias de repositorios
+    question_repo = DjangoQuestionRepository()
+    vote_repo = DjangoVoteRepository()
+    
+    # Inyectar en use case
+    use_case = GetQuestionResultsUseCase(question_repo, vote_repo)
+    
+    # Ejecutar lógica de negocio
+    results = use_case.execute(question_id)
+    
+    return render(request, 'polls/results_web3.html', {'results': results})
+```
+
+### Flujo de Sincronización (Clean Architecture)
+
+```
+1. Comando CLI
+   ↓
+   python manage.py run_reconciliation --from-block=0
+   ↓
+2. Management Command
+   ↓
+   Crea instancias: DjangoVoteRepository, DjangoQuestionRepository, 
+                    Web3BlockchainGateway
+   ↓
+3. SyncVotesUseCase.execute(from_block=0)
+   ↓
+4. Gateway.fetch_vote_events(0) → Lee eventos de blockchain
+   ↓
+5. Para cada evento:
+   ├─ VoteRepository.exists(tx_hash, log_index) → Verifica idempotencia
+   ├─ QuestionRepository.get_by_blockchain_id(blockchain_id) → Obtiene pregunta
+   └─ VoteRepository.save(vote) → Guarda voto con @transaction.atomic
+   ↓
+6. Retorna cantidad de votos sincronizados
+```
+
+### Testing con Clean Architecture
+
+**Test Unitario de Use Case:**
+
+```python
+def test_sync_votes_idempotency():
+    # Arrange - Usar repositorios in-memory
+    mock_gateway = MockBlockchainGateway()
+    question_repo = InMemoryQuestionRepository()
+    vote_repo = InMemoryVoteRepository()
+    
+    question = Question(id=1, blockchain_id=10, ...)
+    question_repo.save(question)
+    
+    mock_gateway.add_mock_vote_event(10, 0, "0xabc", tx_hash="0x123")
+    
+    use_case = SyncVotesUseCase(vote_repo, question_repo, mock_gateway)
+    
+    # Act - Ejecutar dos veces
+    count1 = use_case.execute(from_block=0)
+    count2 = use_case.execute(from_block=0)
+    
+    # Assert - No duplicar votos
+    assert count1 == 1
+    assert count2 == 0
+    assert len(vote_repo.votes) == 1
+```
+
+**Ventajas:**
+- ✅ No requiere base de datos
+- ✅ No requiere blockchain
+- ✅ Test rápido (< 1ms)
+- ✅ Fácil de mantener
+
+### Migración Gradual
+
+El proyecto mantiene **compatibilidad con código legacy**:
+
+**Sistema Actual (Legacy):**
+- `polls/blockchain/services.py` → `BlockchainVotingService`
+- Lógica en modelos y vistas
+
+**Sistema Nuevo (Clean Architecture):**
+- `core/` → Dominio y Use Cases
+- `polls/adapters/` → Implementaciones
+
+**Estrategia de Migración:**
+1. ✅ Nuevas features usan Clean Architecture
+2. ⚠️ Código legacy marcado como deprecated
+3. 📅 Migración gradual en 2-3 meses
+4. ❌ Eliminación final de código deprecated
 
 ## Capas del Sistema
 

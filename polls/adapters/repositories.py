@@ -1,4 +1,5 @@
 from typing import List, Optional
+from django.db import transaction
 from core.domain.interfaces import IQuestionRepository, IVoteRepository
 from core.domain.entities import Question as QuestionEntity, Vote as VoteEntity, Choice as ChoiceEntity
 from polls.blockchain.models import BlockchainQuestion, BlockchainVote, BlockchainChoice
@@ -30,6 +31,7 @@ class DjangoQuestionRepository(IQuestionRepository):
         except BlockchainQuestion.DoesNotExist:
             return None
 
+    @transaction.atomic
     def save(self, question: QuestionEntity) -> QuestionEntity:
         defaults = {
             'question_text': question.text,
@@ -104,6 +106,7 @@ class DjangoQuestionRepository(IQuestionRepository):
         )
 
 class DjangoVoteRepository(IVoteRepository):
+    @transaction.atomic
     def save(self, vote: VoteEntity) -> VoteEntity:
         # Find related question
         try:
